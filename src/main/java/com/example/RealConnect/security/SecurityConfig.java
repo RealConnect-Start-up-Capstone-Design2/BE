@@ -1,5 +1,10 @@
 package com.example.RealConnect.security;
 
+import com.example.RealConnect.security.jwt.JWTFilter;
+import com.example.RealConnect.security.jwt.JWTUtil;
+import com.example.RealConnect.security.jwt.LoginFIlter;
+import com.example.RealConnect.user.domain.Role;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -25,6 +31,10 @@ public class SecurityConfig {
 
     @Value("${front_url}")
     private String frontUrl;
+
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final JWTUtil jwtUtil;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
@@ -42,6 +52,11 @@ public class SecurityConfig {
                 .httpBasic((httpBasic) -> httpBasic.disable());
 
         http
+                .authorizeHttpRequests((authorizeRequests)-> authorizeRequests
+                        .requestMatchers("/login","/api/register", "/api/refresh-token").permitAll()
+                        .requestMatchers("/api/test").hasAuthority(Role.BASIC.getValue())
+                        .anyRequest().authenticated());
+        http
                 .cors((cors)->cors.configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request)
@@ -57,6 +72,12 @@ public class SecurityConfig {
                         return config;
                     }
                 }));
+
+        http
+                .addFilterAt(new LoginFIlter(authenticationManager(authenticationConfiguration), jwtUtil, objectMapper),
+                        UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), LoginFIlter.class);
 
         return http.build();
     }
