@@ -38,13 +38,14 @@ public class Inquiry {
      */
     private String phone;
 
- ///////////////////////요구사항//////////////////////////////////
+ ///////////////////////요구사항//////////////////////////////////////////
 
     /**
      * 문의유형
      *  매매| 전세 | 월세
      */
     private String inquiryType;
+
     private String apartmentName; //단지
     private double area; //면적
     private Long salePrice; //매매가
