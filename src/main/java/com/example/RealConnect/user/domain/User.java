@@ -1,6 +1,6 @@
 package com.example.RealConnect.user.domain;
 
-import com.example.RealConnect.customer.domain.InquiryCustomer;
+import com.example.RealConnect.inquiry.domain.Inquiry;
 import com.example.RealConnect.property.domain.Property;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class User {
         문의 고객 리스트
      */
     @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY)
-    private List<InquiryCustomer> inquiryCustomers;
+    private List<Inquiry> inquiries;
 
     /*
         매물 리스트

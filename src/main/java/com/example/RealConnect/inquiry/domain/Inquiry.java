@@ -1,6 +1,5 @@
-package com.example.RealConnect.customer.domain;
+package com.example.RealConnect.inquiry.domain;
 
-import com.example.RealConnect.apartment.domain.Direction;
 import com.example.RealConnect.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InquiryCustomer {
+public class Inquiry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
