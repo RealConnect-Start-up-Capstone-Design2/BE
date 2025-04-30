@@ -1,6 +1,5 @@
 package com.example.RealConnect.user.domain;
 
-import com.example.RealConnect.customer.domain.Customer;
 import com.example.RealConnect.customer.domain.InquiryCustomer;
 import com.example.RealConnect.property.domain.Property;
 import jakarta.persistence.*;
@@ -28,14 +27,10 @@ public class User {
 
     private String name;
 
+    private String email;
+
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    /*
-        일반 고객 리스트
-     */
-    @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY)
-    private List<Customer> customers;
 
     /*
         문의 고객 리스트

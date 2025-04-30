@@ -1,7 +1,6 @@
 package com.example.RealConnect.property.domain;
 
 import com.example.RealConnect.apartment.domain.Apartment;
-import com.example.RealConnect.customer.domain.Customer;
 import com.example.RealConnect.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,27 +37,29 @@ public class Property {
     /*
         소유자
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "owner_id")
-    private Customer owner;
+    private String ownerName;
+    private String ownerPhone;
+
 
     /*
         임차인
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = true, name = "tenant_id")
-    private Customer tenant;
+    private String tenantName;
+    private String tenantPhone;
 
+    private boolean isSale; //매매여부
     /*
         매매가
      */
     private Long salePrice;
 
+    private boolean isJeonse; //전세여부
     /*
         전세가
      */
     private Long jeonsePrice;
 
+    private boolean isMonth; //월세여부
     /*
         보증금(월세인 경우)
      */
