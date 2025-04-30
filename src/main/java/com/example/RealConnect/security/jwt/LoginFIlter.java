@@ -63,8 +63,6 @@ public class LoginFIlter extends UsernamePasswordAuthenticationFilter {
         // 하나만 꺼내기 (권한이 하나라고 가정)
         String role = userDetails.getAuthorities().iterator().next().getAuthority();
 
-        System.out.println("role:::   ="+role);
-
         //액세스 토큰 발급(10분)
         String token = jwtUtil.generateJwt(username,role, 1000*60*10L); //10분
 

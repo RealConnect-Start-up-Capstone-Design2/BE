@@ -52,7 +52,7 @@ public class UserController {
         return ResponseEntity.ok("ok");
     }
 
-    @PostMapping("/api/refresh-token")
+    @GetMapping("/api/refresh-token")
     public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response)
     {
         Cookie[] cookies = request.getCookies();
@@ -86,14 +86,25 @@ public class UserController {
 
     /**
      * 중복 아이디 존재,
+     * @param error
+     * @return 409
+     */
+    @ExceptionHandler({UsernameAlreadyExistsException.class})
+    public ResponseEntity<String> handleUsernameAlreadyExists(UsernameAlreadyExistsException error) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(error.getMessage());
+    }
+
+    /**
      * 비밀번호와 비밀번호확인이 다른 경우
      * @param error
      * @return 400
      */
-    @ExceptionHandler({UsernameAlreadyExistsException.class, PasswordNotMatchException.class})
-    public ResponseEntity<String> handleUsernameAlreadyExists(RuntimeException error) {
+    @ExceptionHandler({PasswordNotMatchException.class})
+    public ResponseEntity<String> handlePasswordNotMatch(PasswordNotMatchException error) {
         return ResponseEntity
                 .badRequest()
-                .body("ERROR: " + error.getMessage());
+                .body(error.getMessage());
     }
 }
