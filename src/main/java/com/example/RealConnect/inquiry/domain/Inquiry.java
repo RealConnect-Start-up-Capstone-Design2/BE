@@ -6,12 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import com.example.RealConnect.inquiry.domain.InquiryStatus;
+import com.example.RealConnect.inquiry.domain.InquiryType;
+import java.time.LocalDateTime;
 
 /**
  * 문의고객정보
  */
 
 @Entity
+@Table(name = "inquiry") //
 @Getter
 @Builder
 @NoArgsConstructor
@@ -28,6 +33,15 @@ public class Inquiry {
     @ManyToOne(fetch = FetchType.LAZY)
     private User agent;
 
+    // 등록일
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    // 진행 상태 - enum(진행 중, 진행 완료)
+    @Enumerated(EnumType.STRING)
+    private InquiryStatus status;
+
     /**
      * 문의고객 이름
      */
@@ -42,9 +56,12 @@ public class Inquiry {
 
     /**
      * 문의유형
-     *  매매| 전세 | 월세
+     *  매매| 전세 | 월세 | 전체
      */
-    private String inquiryType;
+    // 진행 상태 - enum(전체, 진행 중, 진행 완료)
+    @Enumerated(EnumType.STRING)
+    private InquiryType type;
+
 
     private String apartmentName; //단지
     private double area; //면적

@@ -32,13 +32,19 @@ public class JWTFilter extends OncePerRequestFilter {
     {
         String auth = request.getHeader("Authorization");
 
+        // 토큰이 없으면 다음 필터로 넘김 (permitAll 경로에서도 작동해야 하므로) - 테스트 용
+        if (auth == null || !auth.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         //토큰이 없는경우
-        if (auth == null || !auth.startsWith("Bearer "))
+        /*if (auth == null || !auth.startsWith("Bearer "))
         {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //토큰없는경우 401반환
             response.getWriter().write("토큰이 없습니다.");
             return;
-        }
+        } */
 
         String token = auth.split(" ")[1]; //Bearer 부분 제거
 
