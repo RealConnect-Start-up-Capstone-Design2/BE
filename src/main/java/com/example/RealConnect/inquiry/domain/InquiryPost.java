@@ -6,9 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Builder
 @NoArgsConstructor
@@ -45,7 +48,7 @@ public class InquiryPost {
     /**
      * 업소 연락처
      */
-    private String phone;
+    private String agentPhone;
 
     /**
      * 문의유형: 매매 | 전세 | 월세
@@ -85,4 +88,31 @@ public class InquiryPost {
     @CreatedDate
     private LocalDateTime createdAt;
 
+
+    public InquiryPost withAgent(User agent)
+    {
+        this.agent = agent;
+        return this;
+    }
+    public InquiryPost withDefaultPrices()
+    {
+        if(type.equals(InquiryType.BUY))
+        {
+            jeonsePrice = 0L;
+            deposit = 0L;
+            monthPrice = 0L;
+        }
+        else if(type.equals(InquiryType.JEONSE))
+        {
+            salePrice = 0L;
+            deposit = 0L;
+            monthPrice = 0L;
+        }
+        else
+        {
+            jeonsePrice = 0L;
+            salePrice = 0L;
+        }
+        return this;
+    }
 }
