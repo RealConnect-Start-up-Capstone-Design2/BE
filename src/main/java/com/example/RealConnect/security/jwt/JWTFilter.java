@@ -32,7 +32,8 @@ public class JWTFilter extends OncePerRequestFilter {
     {
         String auth = request.getHeader("Authorization");
 
-        // 토큰이 없으면 다음 필터로 넘김 (permitAll 경로에서도 작동해야 하므로) - 테스트 용/*if (auth == null || !auth.startsWith("Bearer ")) {
+        // 토큰이 없으면 다음 필터로 넘김 (permitAll 경로에서도 작동해야 하므로) - 테스트 용
+        /*if (auth == null || !auth.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
