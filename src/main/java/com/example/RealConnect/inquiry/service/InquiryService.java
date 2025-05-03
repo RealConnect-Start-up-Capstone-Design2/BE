@@ -3,6 +3,7 @@ package com.example.RealConnect.inquiry.service;
 import com.example.RealConnect.inquiry.domain.Inquiry;
 import com.example.RealConnect.inquiry.domain.dto.InquiryCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryResponseDto;
+import com.example.RealConnect.inquiry.domain.dto.InquiryUpdateRequest;
 import com.example.RealConnect.inquiry.repository.InquiryRepository;
 import com.example.RealConnect.user.domain.User;
 import com.example.RealConnect.user.repository.UserRepository;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.RealConnect.inquiry.domain.InquiryType;
 import com.example.RealConnect.inquiry.domain.InquiryStatus;
+
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,5 +77,62 @@ public class InquiryService {
         return inquiries.stream()
                 .map(InquiryResponseDto::from)
                 .collect(Collectors.toList());
+    }
+
+    /*
+    문의 수정을 위한 service
+    -중개사 본인 확인 로직: 보안을 위한 것, 서버에서 jwt 1차 인증 / DB에서 2차 확인
+    1. 단지 이름 수정 가능 - aprtmentName
+    2. 문의 유형 드롭박스로 수정 가능(매매, 전세, 월세) - BUY, JEONSE, MONTH_RENT
+    3. 진행 상태 드롭박스로 수정 가능(진행 중, 진행 완료) - IN_PROGRESS, COMPLETED
+    4. 희망 가격 수정 가능 - 매매라면 salePrice, 전세라면 jeonsePrice, 월세라면 monthPrice
+    5. 문의 내용 수정 가능 - memo
+    6. 문의자 수정 가능 - name
+    7. 문의고객 연락처 수정 가능 - phone
+    8. 즐겨찾기에 추가 가능 - favorite
+     */
+
+    @Transactional
+    public InquiryResponseDto updateInquiry(Long inquiryID, InquiryUpdateRequest dto, Long agentId) throws AccessDeniedException {
+        // 해당 문의 조회
+        Inquiry inquiry = inquiryRepository.findById(inquiryID)
+                .orElseThrow(() -> new IllegalArgumentException("해당 문의 존재하지 않는다.")); // 예외처리
+
+        // 중개사 본인 확인 - DB에서 2차 확인
+        if (!inquiry.getAgent().getId().equals(agentId)) {
+            throw new AccessDeniedException("문의 수정 권한이 없습니다.");
+        }
+
+        // 필드 값 수정
+        inquiry.update(
+                dto.getName(),
+                dto.getPhone(),
+                dto.getApartmentName(),
+                dto.getType(),
+                dto.getStatus(),
+                dto.getSalePrice(),
+                dto.getJeonsePrice(),
+                dto.getMonthPrice(),
+                dto.getMemo(),
+                dto.isFavorite()
+        );
+
+        // 수정 결과 반환
+        return InquiryResponseDto.from(inquiry);
+    }
+
+    /*
+    문의 삭제를 위한 Service
+     */
+    @Transactional
+    public void deleteInquiry(Long inquiryId, Long agentId) throws AccessDeniedException {
+        Inquiry inquiry = inquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 문의가 존재하지 않습니다."));
+
+        if (!inquiry.getAgent().getId().equals(agentId)) {
+            throw new AccessDeniedException("문의 삭제 권한이 없습니다.");
+        }
+
+        inquiryRepository.delete(inquiry);
     }
 }
