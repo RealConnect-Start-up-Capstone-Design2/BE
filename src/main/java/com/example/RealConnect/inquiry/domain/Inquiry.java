@@ -80,4 +80,20 @@ public class Inquiry {
         즐겨찾기
      */
     private boolean favorite;
+
+    // 필드 update 메소드
+    public void update(String name, String phone, String apartmentName, InquiryType type,
+                       InquiryStatus status, Long salePrice, Long jeonsePrice, Long monthPrice,
+                       String memo, boolean favorite) {
+        this.name = name;
+        this.phone = phone;
+        this.apartmentName = apartmentName;
+        this.type = type;
+        this.status = status;
+        this.salePrice = salePrice;
+        this.jeonsePrice = jeonsePrice;
+        this.monthPrice = monthPrice;
+        this.memo = memo;
+        this.favorite = favorite;
+    }
 }

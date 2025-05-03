@@ -2,6 +2,7 @@ package com.example.RealConnect.inquiry.controller;
 
 import com.example.RealConnect.inquiry.domain.dto.InquiryCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryResponseDto;
+import com.example.RealConnect.inquiry.domain.dto.InquiryUpdateRequest;
 import com.example.RealConnect.inquiry.service.InquiryService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.RealConnect.security.JwtTokenProvider;
+
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 // 프론트에서의 요청 수신, DTO매핑, 응답 전송
@@ -77,4 +80,41 @@ public class InquiryController {
         return ResponseEntity.ok(result);
     }
 
+    /*
+    문의 수정
+     */
+    @PutMapping("/{inquiryId}")
+    public ResponseEntity<InquiryResponseDto> updateInquiry(
+            @PathVariable("inquiryId") Long inquiryId,
+            @RequestBody InquiryUpdateRequest dto,
+            HttpServletRequest request
+    ) throws Exception{
+        // 요청 헤더에서 JWT 토큰 추출
+        String token = jwtTokenProvider.resolveToken(request);
+
+        // 토큰에서 사용자 ID 추출
+        Long agentId = jwtTokenProvider.getUserId(token);
+
+        // 수정 진행
+        InquiryResponseDto updated = inquiryService.updateInquiry(inquiryId, dto, agentId);
+
+        //
+        return ResponseEntity.ok(updated);
+    }
+
+    /*
+    문의 삭제
+     */
+    @DeleteMapping("/{inquiryId}")
+    public ResponseEntity<Void> deleteInquiry(
+            @PathVariable Long inquiryId,
+            HttpServletRequest request
+    ) throws AccessDeniedException {
+        String token = jwtTokenProvider.resolveToken(request);
+        Long agentId = jwtTokenProvider.getUserId(token);
+
+        inquiryService.deleteInquiry(inquiryId, agentId);
+
+        return ResponseEntity.noContent().build(); // 204 No Content
+    }
 }
