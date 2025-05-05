@@ -4,12 +4,12 @@ import com.example.RealConnect.inquiry.domain.dto.InquiryCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryResponseDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryUpdateRequest;
 import com.example.RealConnect.inquiry.service.InquiryService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.RealConnect.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import com.example.RealConnect.security.JwtTokenProvider;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -21,7 +21,6 @@ import java.util.List;
 public class InquiryController {
 
     private final InquiryService inquiryService; //
-    private final JwtTokenProvider jwtTokenProvider; //
 
     /*
     문의 등록
@@ -33,16 +32,12 @@ public class InquiryController {
     @PostMapping
     public ResponseEntity<InquiryResponseDto> registerInquiry(
             @RequestBody InquiryCreateRequestDto dto,
-            HttpServletRequest request
+            @AuthenticationPrincipal User userDetails
     ) {
-        // 요청 헤더에서 JWT 추출 → 사용자 ID 추출
-        //String token = jwtTokenProvider.resolveToken(request); // security 안에서 jwttokenprovider 클래스 만들기
-        //Long agentId = jwtTokenProvider.getUserId(token); // 수정 해야함
-
-        Long agentId = 1L; // 테스트 용
+        String username = userDetails.getUsername(); // ID
 
         // 서비스 호출
-        InquiryResponseDto response = inquiryService.register(dto, agentId);
+        InquiryResponseDto response = inquiryService.register(dto, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -63,10 +58,10 @@ public class InquiryController {
             @RequestParam(required = false) String status, // 진행 상태 드롭박스
             @RequestParam(required = false) String inquiryType, // 문의 우형 드롭박스
             @RequestParam(required = false) String keyword, // 통합검색 시 검색어
-            HttpServletRequest request
+            @AuthenticationPrincipal User userDetails
     ) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long agentId = jwtTokenProvider.getUserId(token);
+        //
+        String username = userDetails.getUsername();
 
         // 드롭박스에서 '전체'가 입력되면 조건 적용하지 않도록 null 처리
         String filterStatus = "전체".equalsIgnoreCase(status) ? null : status;
@@ -74,7 +69,7 @@ public class InquiryController {
         String filterKeyword = (keyword == null || keyword.isBlank()) ? null : keyword;
 
         // 조건을 받아서 service에서 처리
-        List<InquiryResponseDto> result = inquiryService.searchInquiries(agentId, filterStatus, filterType, filterKeyword);
+        List<InquiryResponseDto> result = inquiryService.searchInquiries(username, filterStatus, filterType, filterKeyword);
 
         // 검색 결과를 json으로 응답 - 프론트에서 바로 리스트 보여줄 수 있게 함.
         return ResponseEntity.ok(result);
@@ -87,16 +82,12 @@ public class InquiryController {
     public ResponseEntity<InquiryResponseDto> updateInquiry(
             @PathVariable("inquiryId") Long inquiryId,
             @RequestBody InquiryUpdateRequest dto,
-            HttpServletRequest request
+            @AuthenticationPrincipal User userDetails
     ) throws Exception{
-        // 요청 헤더에서 JWT 토큰 추출
-        String token = jwtTokenProvider.resolveToken(request);
-
-        // 토큰에서 사용자 ID 추출
-        Long agentId = jwtTokenProvider.getUserId(token);
-
+        //
+        String username = userDetails.getUsername();
         // 수정 진행
-        InquiryResponseDto updated = inquiryService.updateInquiry(inquiryId, dto, agentId);
+        InquiryResponseDto updated = inquiryService.updateInquiry(inquiryId, dto, username);
 
         //
         return ResponseEntity.ok(updated);
@@ -108,12 +99,11 @@ public class InquiryController {
     @DeleteMapping("/{inquiryId}")
     public ResponseEntity<Void> deleteInquiry(
             @PathVariable Long inquiryId,
-            HttpServletRequest request
+            @AuthenticationPrincipal User userDetails
     ) throws AccessDeniedException {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long agentId = jwtTokenProvider.getUserId(token);
-
-        inquiryService.deleteInquiry(inquiryId, agentId);
+        //
+        String username = userDetails.getUsername();
+        inquiryService.deleteInquiry(inquiryId, username);
 
         return ResponseEntity.noContent().build(); // 204 No Content
     }
