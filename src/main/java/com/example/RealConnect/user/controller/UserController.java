@@ -45,13 +45,6 @@ public class UserController {
         return ResponseEntity.ok("회원가입 성공!");
     }
 
-    @GetMapping("/api/test")
-    public ResponseEntity<String> test(Principal principal)
-    {
-        System.out.println(principal.getName());
-        return ResponseEntity.ok("ok");
-    }
-
     @GetMapping("/api/refresh-token")
     public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response)
     {
