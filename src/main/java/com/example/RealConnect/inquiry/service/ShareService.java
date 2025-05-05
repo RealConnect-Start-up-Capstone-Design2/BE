@@ -4,6 +4,8 @@ import com.example.RealConnect.inquiry.domain.InquiryPost;
 import com.example.RealConnect.inquiry.domain.InquiryType;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostResponseDto;
+import com.example.RealConnect.inquiry.exception.AccessDeniedException;
+import com.example.RealConnect.inquiry.exception.InquiryPostNotFoundException;
 import com.example.RealConnect.inquiry.repository.InquiryPostRepository;
 import com.example.RealConnect.user.domain.User;
 import com.example.RealConnect.user.repository.UserRepository;
@@ -55,5 +57,32 @@ public class ShareService {
             dtoList.add(InquiryPostResponseDto.toDto(post));
         }
         return dtoList;
+    }
+
+    /**
+     * 공유글 삭제
+     * @param username 사용자 ID
+     * @param id 공유글 ID
+     */
+    public void delete(String username, Long id)
+    {
+        InquiryPost post = findInquiryPostOrThorw(id);
+        User user = userRepository.findByUsername(username).get();
+
+        //삭제 권한 검증
+        checkOwnershipOrThrow(post, user);
+
+        inquiryPostRepository.delete(post);
+    }
+
+    private InquiryPost findInquiryPostOrThorw(Long id)
+    {
+        return inquiryPostRepository.findById(id)
+                .orElseThrow(() -> new InquiryPostNotFoundException("잘못된 공유글 ID"));
+    }
+
+    private void checkOwnershipOrThrow(InquiryPost post, User user)
+    {
+        if(!post.getAgent().equals(user)) throw new AccessDeniedException("삭제 권한 없음");
     }
 }
