@@ -55,10 +55,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeRequests)-> authorizeRequests
                         .requestMatchers("/login","/api/register", "/api/refresh-token").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/inquiries").permitAll() // 테스트 용
-                        .requestMatchers("/api/test").hasAuthority(Role.BASIC.getValue())
-                        //.anyRequest().authenticated());
-                        .anyRequest().permitAll()); // 테스트용
+                        .anyRequest().authenticated());
         http
                 .cors((cors)->cors.configurationSource(new CorsConfigurationSource() {
                     @Override
