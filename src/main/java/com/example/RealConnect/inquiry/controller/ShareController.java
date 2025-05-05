@@ -26,19 +26,19 @@ public class ShareController {
      * @return HTTP 200 OK 응답 (본문 없음)
      */
     @PostMapping("/api/shares")
-    public ResponseEntity<Void> share(@RequestBody InquiryPostCreateRequestDto requestDto, Principal principal)
+    public ResponseEntity<InquiryPostResponseDto> share(@RequestBody InquiryPostCreateRequestDto requestDto, Principal principal)
     {
         //유효성검사 필요
 
-        shareService.share(principal.getName(), requestDto);
-        return ResponseEntity.ok().build();
+        InquiryPostResponseDto post = shareService.share(principal.getName(), requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
     @DeleteMapping("/api/shares/{id}")
     public ResponseEntity<Void> deleteShare(@PathVariable Long id, Principal principal)
     {
         shareService.delete(principal.getName(), id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
 

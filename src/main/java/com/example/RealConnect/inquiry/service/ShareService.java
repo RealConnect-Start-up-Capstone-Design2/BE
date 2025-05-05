@@ -29,7 +29,7 @@ public class ShareService {
      * @param username
      * @param requestDto
      */
-    public void share(String username, InquiryPostCreateRequestDto requestDto)
+    public InquiryPostResponseDto share(String username, InquiryPostCreateRequestDto requestDto)
     {
         //로그인되어있으니 존재한다고 가정.
         User user = userRepository.findByUsername(username).get();
@@ -38,7 +38,8 @@ public class ShareService {
         InquiryPost post = requestDto.toEntity()
                         .withAgent(user)
                         .withDefaultPrices();
-        inquiryPostRepository.save(post);
+
+        return InquiryPostResponseDto.toDto(inquiryPostRepository.save(post));
     }
 
     /**
