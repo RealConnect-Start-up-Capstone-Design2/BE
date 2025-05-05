@@ -38,7 +38,7 @@ public class InquiryPostCreateRequestDto {
      * 업소 연락처
      */
     @NotBlank
-    private String agentPphone;
+    private String agentPhone;
 
     /**
      * 문의유형: 매매 | 전세 | 월세
@@ -78,7 +78,7 @@ public class InquiryPostCreateRequestDto {
                 .l2(l2)
                 .l3(l3)
                 .agentName(agentName)
-                .agentPhone(agentPphone)
+                .agentPhone(agentPhone)
                 .type(type)
                 .customerName(customerName)
                 .customerPhone(customerPhone)
