@@ -4,6 +4,7 @@ import com.example.RealConnect.inquiry.domain.InquiryPost;
 import com.example.RealConnect.inquiry.domain.InquiryType;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostResponseDto;
+import com.example.RealConnect.inquiry.domain.dto.InquiryResponseDto;
 import com.example.RealConnect.inquiry.exception.AccessDeniedException;
 import com.example.RealConnect.inquiry.exception.InquiryPostNotFoundException;
 import com.example.RealConnect.inquiry.repository.InquiryPostRepository;
@@ -44,6 +45,20 @@ public class ShareService {
         return InquiryPostResponseDto.toDto(inquiryPostRepository.save(post));
     }
 
+    /**
+     * 공유글 1개 조회
+     * @param username
+     * @param id 공유글 id
+     * @return
+     */
+    public InquiryPostResponseDto getShare(String username, Long id)
+    {
+        User user = userRepository.findByUsername(username).get();
+        InquiryPost post = findInquiryPostOrThorw(id);
+
+        return InquiryPostResponseDto.toDto(post, user);
+
+    }
     /**
      * 내 공유글 조회
      * @param username
@@ -102,4 +117,6 @@ public class ShareService {
     {
         if(!post.getAgent().equals(user)) throw new AccessDeniedException("삭제 권한 없음");
     }
+
+
 }

@@ -23,7 +23,7 @@ public class ShareController {
      * 공유글 작성
      * @param requestDto 공유글 생성에 필요한 데이터가 담긴 DTO
      * @param principal 현재 인증된 사용자의 보안 컨텍스트 정보
-     * @return HTTP 200 OK 응답 (본문 없음)
+     * @return 201 + 생성된 공유글 DTO
      */
     @PostMapping("/api/shares")
     public ResponseEntity<InquiryPostResponseDto> share(@RequestBody InquiryPostCreateRequestDto requestDto, Principal principal)
@@ -34,6 +34,27 @@ public class ShareController {
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
+    /**
+     * 공유글 1개 조회
+     * 본인이 작성한 글인 경우, 고객의 정보가 포함
+     * 타인이 작성한 글인 경우, 고객의 정보가 null로 반환
+     * @param id
+     * @param principal
+     * @return 200 + 조회한 공유글 DTO
+     */
+    @GetMapping("/api/shares/{id}")
+    public ResponseEntity<InquiryPostResponseDto> getShare(@PathVariable Long id, Principal principal)
+    {
+        InquiryPostResponseDto post = shareService.getShare(principal.getName(), id);
+        return ResponseEntity.status(HttpStatus.OK).body(post);
+    }
+
+    /**
+     * 공유글 삭제
+     * @param id 공유글 ID
+     * @param principal 현재 인증된 사용자의 보안 컨텍스트 정보
+     * @return 204
+     */
     @DeleteMapping("/api/shares/{id}")
     public ResponseEntity<Void> deleteShare(@PathVariable Long id, Principal principal)
     {
@@ -54,6 +75,13 @@ public class ShareController {
         return ResponseEntity.ok(myPosts);
     }
 
+    /**
+     * 공유글 수정(전체 필드를 덮어씀)
+     * @param id 공유글 ID
+     * @param requestDto 공유글 수정에 필요한 데이터가 담긴 DTO
+     * @param principal 현재 인증된 사용자의 보안 컨텍스트 정보
+     * @return 200 + 수정된 공유글 DTO
+     */
     @PutMapping("/api/shares/{id}")
     public ResponseEntity<InquiryPostResponseDto> modifyShare(@PathVariable Long id, @RequestBody InquiryPostCreateRequestDto requestDto, Principal principal)
     {

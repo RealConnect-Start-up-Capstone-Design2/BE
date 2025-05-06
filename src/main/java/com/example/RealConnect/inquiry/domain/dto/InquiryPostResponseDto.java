@@ -2,6 +2,7 @@ package com.example.RealConnect.inquiry.domain.dto;
 
 import com.example.RealConnect.inquiry.domain.InquiryPost;
 import com.example.RealConnect.inquiry.domain.InquiryType;
+import com.example.RealConnect.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -62,6 +63,12 @@ public class InquiryPostResponseDto {
     private String memo;
 
 
+    public void hide()
+    {
+        customerName = null;
+        customerPhone = null;
+    }
+
     public static InquiryPostResponseDto toDto(InquiryPost p)
     {
         return InquiryPostResponseDto.builder()
@@ -85,5 +92,41 @@ public class InquiryPostResponseDto {
                 .memo(p.getMemo())
                 .build();
 
+    }
+
+    /**
+     * 고객정보 숨김이 필요한 경우
+     * @param p
+     * @param user 요청자
+     * @return
+     */
+    public static InquiryPostResponseDto toDto(InquiryPost p, User user)
+    {
+        InquiryPostResponseDto dto = InquiryPostResponseDto.builder()
+                .id(p.getId())
+                .title(p.getTitle())
+                .l1(p.getL1())
+                .l2(p.getL2())
+                .l3(p.getL3())
+                .agentName(p.getAgentName())
+                .agentPhone(p.getAgentPhone())
+                .type(p.getType())
+                .customerName(p.getCustomerName())
+                .customerPhone(p.getCustomerPhone())
+
+                .apartmentName(p.getApartmentName())
+                .area(p.getArea())
+                .salePrice(p.getSalePrice())
+                .jeonsePrice(p.getJeonsePrice())
+                .deposit(p.getDeposit())
+                .monthPrice(p.getMonthPrice())
+                .memo(p.getMemo())
+                .build();
+
+        if(!p.getAgent().equals(user))
+        {
+            dto.hide();
+        }
+        return dto;
     }
 }
