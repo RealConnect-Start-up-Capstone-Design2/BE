@@ -93,4 +93,30 @@ public class InquiryPostCreateRequestDto {
                 .status(InquiryStatus.IN_PROGRESS) //기본값
                 .build();
     }
+
+    public InquiryPost toEntity(Long id)
+    {
+
+        return InquiryPost.builder()
+                .id(id)
+                .title(title)
+                .l1(l1)
+                .l2(l2)
+                .l3(l3)
+                .agentName(agentName)
+                .agentPhone(agentPhone)
+                .type(type)
+                .customerName(customerName)
+                .customerPhone(customerPhone)
+
+                .apartmentName(apartmentName)
+                .area(area)
+                .salePrice(salePrice)
+                .jeonsePrice(jeonsePrice)
+                .deposit(deposit)
+                .monthPrice(monthPrice)
+                .memo(memo)
+                .status(InquiryStatus.IN_PROGRESS) //기본값
+                .build();
+    }
 }

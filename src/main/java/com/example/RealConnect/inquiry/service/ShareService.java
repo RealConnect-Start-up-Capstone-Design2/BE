@@ -9,6 +9,7 @@ import com.example.RealConnect.inquiry.exception.InquiryPostNotFoundException;
 import com.example.RealConnect.inquiry.repository.InquiryPostRepository;
 import com.example.RealConnect.user.domain.User;
 import com.example.RealConnect.user.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class ShareService {
 
     private final UserRepository userRepository;
     private final InquiryPostRepository inquiryPostRepository;
+    private final EntityManager em;
 
     /**
      * 공유글 생성
@@ -74,6 +76,20 @@ public class ShareService {
         checkOwnershipOrThrow(post, user);
 
         inquiryPostRepository.delete(post);
+    }
+
+
+
+    public InquiryPostResponseDto modify(String username, Long id, InquiryPostCreateRequestDto requestDto)
+    {
+        User user = userRepository.findByUsername(username).get();
+
+        InquiryPost post = findInquiryPostOrThorw(id);
+        checkOwnershipOrThrow(post, user);
+
+        post.modifyAll(requestDto)
+                .withDefaultPrices();
+        return InquiryPostResponseDto.toDto(post);
     }
 
     private InquiryPost findInquiryPostOrThorw(Long id)

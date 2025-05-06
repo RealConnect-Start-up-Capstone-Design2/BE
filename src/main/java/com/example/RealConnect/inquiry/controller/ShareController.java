@@ -54,6 +54,14 @@ public class ShareController {
         return ResponseEntity.ok(myPosts);
     }
 
+    @PutMapping("/api/shares/{id}")
+    public ResponseEntity<InquiryPostResponseDto> modifyShare(@PathVariable Long id, @RequestBody InquiryPostCreateRequestDto requestDto, Principal principal)
+    {
+        InquiryPostResponseDto post = shareService.modify(principal.getName(), id, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(post);
+    }
+
+
 
     /**
      * 요청한 공유글이 존재하지 않는 경우

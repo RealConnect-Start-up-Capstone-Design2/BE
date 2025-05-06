@@ -1,5 +1,6 @@
 package com.example.RealConnect.inquiry.domain;
 
+import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequestDto;
 import com.example.RealConnect.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -115,6 +116,28 @@ public class InquiryPost {
             jeonsePrice = 0L;
             salePrice = 0L;
         }
+        return this;
+    }
+
+    public InquiryPost modifyAll(InquiryPostCreateRequestDto requestDto)
+    {
+        title = requestDto.getTitle();
+        l1 = requestDto.getL1();
+        l2 = requestDto.getL2();
+        l3 = requestDto.getL3();
+        agentName = requestDto.getAgentName();
+        agentPhone = requestDto.getAgentPhone();
+        type = requestDto.getType();
+        customerName = requestDto.getCustomerName();
+        customerPhone = requestDto.getCustomerPhone();
+        apartmentName = requestDto.getApartmentName();
+        area = requestDto.getArea();
+        salePrice = requestDto.getSalePrice();
+        jeonsePrice = requestDto.getJeonsePrice();
+        deposit = requestDto.getDeposit();
+        monthPrice = requestDto.getMonthPrice();
+        memo = requestDto.getMemo();
+
         return this;
     }
 }
