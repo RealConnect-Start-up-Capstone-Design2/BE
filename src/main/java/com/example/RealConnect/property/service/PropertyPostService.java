@@ -1,10 +1,10 @@
 package com.example.RealConnect.property.service;
 
-import com.example.RealConnect.apartment.repository.apartmentRepository;
+import com.example.RealConnect.apartment.repository.ApartmentRepository;
 import com.example.RealConnect.property.domain.Property;
 import com.example.RealConnect.property.domain.PropertyStatus;
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
-import com.example.RealConnect.property.repository.propertyRepository;
+import com.example.RealConnect.property.repository.PropertyRepository;
 import com.example.RealConnect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,11 @@ import com.example.RealConnect.user.domain.User;
 // 매물 등록
 @Service
 @RequiredArgsConstructor
-public class propertyPostService {
+public class PropertyPostService {
 
-    private final propertyRepository propertyRepository;
+    private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
-    private final apartmentRepository apartmentRepository;
+    private final ApartmentRepository apartmentRepository;
 
     public boolean save(PropertyRequestDto dto) {
         Apartment apartment = apartmentRepository.findById(dto.getApartmentId())

@@ -1,19 +1,19 @@
 package com.example.RealConnect.property.controller;
 
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
-import com.example.RealConnect.property.service.propertyPostService;
+import com.example.RealConnect.property.service.PropertyPostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-public class propertyPostController {
+public class PropertyPostController {
 
-    private final propertyPostService propertyPostService;
+    private final PropertyPostService propertyPostService;
 
     @PostMapping("api/properties/add")
     public ResponseEntity<String> saveProperty(@RequestBody @Valid PropertyRequestDto propertyRequestDto){

@@ -2,18 +2,16 @@ package com.example.RealConnect.property.controller;
 
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
 import com.example.RealConnect.property.domain.dto.PropertyStatusDto;
-import com.example.RealConnect.property.service.propertyModifyService;
+import com.example.RealConnect.property.service.PropertyModifyService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.valves.rewrite.RewriteCond;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-public class propertyModifyController {
+public class PropertyModifyController {
 
-    private final propertyModifyService propertyModifyService;
+    private final PropertyModifyService propertyModifyService;
 
     // 매물 정보 수정
     @PutMapping("/api/properties/{aId}")

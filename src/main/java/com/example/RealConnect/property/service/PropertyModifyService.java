@@ -1,11 +1,11 @@
 package com.example.RealConnect.property.service;
 
 import com.example.RealConnect.apartment.domain.Apartment;
-import com.example.RealConnect.apartment.repository.apartmentRepository;
+import com.example.RealConnect.apartment.repository.ApartmentRepository;
 import com.example.RealConnect.property.domain.Property;
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
 import com.example.RealConnect.property.domain.dto.PropertyStatusDto;
-import com.example.RealConnect.property.repository.propertyRepository;
+import com.example.RealConnect.property.repository.PropertyRepository;
 import com.example.RealConnect.user.domain.User;
 import com.example.RealConnect.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class propertyModifyService {
+public class PropertyModifyService {
 
-    private final propertyRepository propertyRepository;
+    private final PropertyRepository propertyRepository;
     private final UserRepository userRepository;
-    private final apartmentRepository apartmentRepository;
+    private final ApartmentRepository apartmentRepository;
 
     // 매물 정보 수정
     @Transactional
