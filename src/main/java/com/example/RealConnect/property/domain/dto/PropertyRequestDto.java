@@ -14,10 +14,6 @@ public class PropertyRequestDto {
     @NotNull(message = "아파트 아이디를 입력하세요.")
     private Long apartmentId;
 
-    // 중개사 id
-    @NotNull(message = "중개사 아이디를 입력하세요.")
-    private Long agentId;
-
     // 소유자
     @NotBlank(message = "소유자 이름을 입력하세요.")
     private String ownerName;

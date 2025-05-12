@@ -4,6 +4,7 @@ import com.example.RealConnect.apartment.repository.ApartmentRepository;
 import com.example.RealConnect.property.domain.Property;
 import com.example.RealConnect.property.domain.PropertyStatus;
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
+import com.example.RealConnect.property.exception.ApartmentNotMatchException;
 import com.example.RealConnect.property.repository.PropertyRepository;
 import com.example.RealConnect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,12 @@ public class PropertyPostService {
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
 
-    public boolean save(PropertyRequestDto dto) {
+    public boolean save(PropertyRequestDto dto, String name) {
         Apartment apartment = apartmentRepository.findById(dto.getApartmentId())
-                .orElseThrow(() -> new IllegalArgumentException("아파트가 존재하지 않습니다."));
-        User agent = userRepository.findById(dto.getAgentId())
-                .orElseThrow(() -> new IllegalArgumentException("중개사가 존재하지 않습니다."));
+                .orElse(null);
+        User agent = findUser(name);
+
+        apartmentVerify(apartment);
 
         Property property = Property.builder()
                 .apartment(apartment)
@@ -46,5 +48,16 @@ public class PropertyPostService {
 
         propertyRepository.save(property);
         return true;
+    }
+
+    public User findUser(String name){
+        return userRepository.findById(Long.valueOf(name)).get();
+    }
+
+    private void apartmentVerify(Apartment apartment) {
+        if(apartment == null)
+        {
+            throw new ApartmentNotMatchException("아파트 등록이 되지 않았습니다.");
+        }
     }
 }
