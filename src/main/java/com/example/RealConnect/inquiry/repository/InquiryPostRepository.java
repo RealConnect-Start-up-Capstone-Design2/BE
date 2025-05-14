@@ -10,4 +10,13 @@ public interface InquiryPostRepository extends JpaRepository<InquiryPost, Long> 
 
     List<InquiryPost> findInquiryPostsByAgent(User agent);
 
+    List<InquiryPost> findAll();
+
+    List<InquiryPost> findInquiryPostsByL1(String l1);
+
+    List<InquiryPost> findInquiryPostsByL1AndL2(String l1, String l2);
+
+    List<InquiryPost> findInquiryPostsByL1AndL2AndL3(String l1, String l2, String l3);
+
+
 }

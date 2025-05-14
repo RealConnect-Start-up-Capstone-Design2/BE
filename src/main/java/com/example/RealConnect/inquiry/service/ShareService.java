@@ -107,6 +107,49 @@ public class ShareService {
         return InquiryPostResponseDto.toDto(post);
     }
 
+    /**
+     * l1, l2, l3에 해당하는 공유글 조회
+     * 타인의 글인 경우, 문의자 정보 숨김
+     * @param username
+     * @param l1
+     * @param l2
+     * @param l3
+     * @return
+     */
+    public List<InquiryPostResponseDto> searchInquiryPosts(String username, String l1, String l2, String l3)
+    {
+        User user = userRepository.findByUsername(username).get();
+
+        List<InquiryPost> list;
+        /* 모든 문의글 반환 */
+        if(l1.isBlank())
+        {
+            list = inquiryPostRepository.findAll();
+        }
+        /* 시 전체 반환 */
+        else if(l2.isBlank())
+        {
+            list = inquiryPostRepository.findInquiryPostsByL1(l1);
+        }
+        /* 구 전체 반환 */
+        else if(l3.isBlank())
+        {
+            list = inquiryPostRepository.findInquiryPostsByL1AndL2(l1, l2);
+        }
+        /* 동 전체 반환 */
+        else
+        {
+            list = inquiryPostRepository.findInquiryPostsByL1AndL2AndL3(l1, l2, l3);
+        }
+
+        List<InquiryPostResponseDto> dtoList = new ArrayList<>();
+        for(int i=0; i<list.size(); i++)
+        {
+            dtoList.add(InquiryPostResponseDto.toDto(list.get(i), user));
+        }
+        return dtoList;
+    }
+
     private InquiryPost findInquiryPostOrThorw(Long id)
     {
         return inquiryPostRepository.findById(id)
@@ -117,6 +160,7 @@ public class ShareService {
     {
         if(!post.getAgent().equals(user)) throw new AccessDeniedException("삭제 권한 없음");
     }
+
 
 
 }

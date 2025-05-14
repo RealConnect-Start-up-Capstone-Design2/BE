@@ -90,6 +90,27 @@ public class ShareController {
     }
 
 
+    /**
+     * 로그인한 사용자가 공유글을 지역 조건(시·구·동)으로 검색
+     * @param l1 시
+     * @param l2 구
+     * @param l3 동
+     * @param principal
+     * @return 조건에 맞는 공유글 리스트
+     */
+    @GetMapping("/api/shares")
+    public ResponseEntity<List<InquiryPostResponseDto>> searchInquiryPost(
+            @RequestParam(required = false, defaultValue = "") String l1,
+            @RequestParam(required = false, defaultValue = "") String l2,
+            @RequestParam(required = false, defaultValue = "") String l3,
+            Principal principal)
+    {
+        List<InquiryPostResponseDto> inquiryPostResponseDtos = shareService.searchInquiryPosts(principal.getName(), l1, l2, l3);
+        return ResponseEntity.ok(inquiryPostResponseDtos);
+    }
+
+
+
 
     /**
      * 요청한 공유글이 존재하지 않는 경우
