@@ -135,11 +135,11 @@ public class ShareService {
         // Inquiry 정보를 inquiryPost 정보로 빌드
         InquiryPost post = InquiryPost.builder()
                 .agent(user)
-                .title(inquiry.getApartmentName() + " 문의 공유")
+                .title(request.getTitle()) // 프론트에서 입력 값 받아서 사용
                 .l1(request.getL1()) // 추후 위치 정보 파싱 가능
                 .l2(request.getL2()) //
                 .l3(request.getL3()) // 프론트에서 입력 받은 값으로 사용
-                .agentName(user.getName())
+                .agentName(user.getName()) // 업소명
                 .agentPhone(request.getAgentPhone()) // 연락처는 프론트에서 입력 받은 값으로 사용
                 .type(inquiry.getType())
                 .customerName(inquiry.getName())
@@ -150,7 +150,7 @@ public class ShareService {
                 .jeonsePrice(inquiry.getJeonsePrice())
                 .deposit(inquiry.getDeposit())
                 .monthPrice(inquiry.getMonthPrice())
-                .memo(inquiry.getMemo())
+                .memo(request.getMemo()) // 프론트에서 입력 받은 값으로 사용
                 .status(inquiry.getStatus())
                 .build()
                 .withDefaultPrices();
