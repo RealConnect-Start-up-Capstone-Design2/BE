@@ -1,5 +1,6 @@
 package com.example.RealConnect.inquiry.controller;
 
+import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequest;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostResponseDto;
 import com.example.RealConnect.inquiry.exception.AccessDeniedException;
@@ -8,6 +9,8 @@ import com.example.RealConnect.inquiry.service.ShareService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -111,5 +114,15 @@ public class ShareController {
     public ResponseEntity<String> handleForbidden(AccessDeniedException e)
     {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    // 문의 관리에서 공유 글로 등록
+    @PostMapping("/api/inquiries/{inquiryId}/share")
+    public ResponseEntity<InquiryPostResponseDto> share(
+            @PathVariable Long inquiryId,
+            @RequestBody InquiryPostCreateRequest request,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return ResponseEntity.ok(shareService.shareFromInquiry(userDetails.getUsername(), inquiryId, request));
     }
 }

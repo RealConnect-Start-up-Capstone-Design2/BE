@@ -1,7 +1,9 @@
 package com.example.RealConnect.inquiry.service;
 
+import com.example.RealConnect.inquiry.domain.Inquiry;
 import com.example.RealConnect.inquiry.domain.InquiryPost;
 import com.example.RealConnect.inquiry.domain.InquiryType;
+import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequest;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostResponseDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryResponseDto;
@@ -118,5 +120,43 @@ public class ShareService {
         if(!post.getAgent().equals(user)) throw new AccessDeniedException("삭제 권한 없음");
     }
 
+    // 문의 관리에서 '공유하기' 클릭하여 문의 공유
+    public InquiryPostResponseDto shareFromInquiry(String username, Long inquiryId, InquiryPostCreateRequest request){
+        // DB에서 해당 유저 조회
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+        // inquiryId에 해당하는 Inquiry 객체 조회
+        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
+        if (inquiry == null || !inquiry.getAgent().equals(user)) {
+            throw new AccessDeniedException("해당 문의에 접근할 권한이 없습니다.");
+        }
+
+        // Inquiry 정보를 inquiryPost 정보로 빌드
+        InquiryPost post = InquiryPost.builder()
+                .agent(user)
+                .title(inquiry.getApartmentName() + " 문의 공유")
+                .l1(request.getL1()) // 추후 위치 정보 파싱 가능
+                .l2(request.getL2()) //
+                .l3(request.getL3()) // 프론트에서 입력 받은 값으로 사용
+                .agentName(user.getName())
+                .agentPhone(request.getAgentPhone()) // 연락처는 프론트에서 입력 받은 값으로 사용
+                .type(inquiry.getType())
+                .customerName(inquiry.getName())
+                .customerPhone(inquiry.getPhone())
+                .apartmentName(inquiry.getApartmentName())
+                .area(inquiry.getArea())
+                .salePrice(inquiry.getSalePrice())
+                .jeonsePrice(inquiry.getJeonsePrice())
+                .deposit(inquiry.getDeposit())
+                .monthPrice(inquiry.getMonthPrice())
+                .memo(inquiry.getMemo())
+                .status(inquiry.getStatus())
+                .build()
+                .withDefaultPrices();
+
+        inquiryPostRepository.save(post);
+        return InquiryPostResponseDto.toDto(post);
+    }
 
 }
