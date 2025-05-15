@@ -4,6 +4,7 @@ import com.example.RealConnect.apartment.domain.Apartment;
 import com.example.RealConnect.apartment.repository.ApartmentRepository;
 import com.example.RealConnect.property.domain.Property;
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
+import com.example.RealConnect.property.domain.dto.PropertyResponseDto;
 import com.example.RealConnect.property.domain.dto.PropertyStatusDto;
 import com.example.RealConnect.property.exception.ApartmentNotMatchException;
 import com.example.RealConnect.property.exception.PropertyNotMatchException;
@@ -24,7 +25,7 @@ public class PropertyModifyService {
 
     // 매물 정보 수정
     @Transactional
-    public boolean modify(Long id, PropertyRequestDto dto, User agent){
+    public PropertyResponseDto modify(Long id, PropertyRequestDto dto, User agent){
         Property property = propertyRepository.findById(id)
                 .orElse(null);
         Apartment apartment = apartmentRepository.findById(dto.getApartmentId())
@@ -34,7 +35,8 @@ public class PropertyModifyService {
         apartmentVerify(apartment);
 
         property.update(dto, apartment, agent);
-        return true;
+
+        return new PropertyResponseDto(property);
     }
 
     // 매물 상태 변경
@@ -50,7 +52,7 @@ public class PropertyModifyService {
     }
 
     public User findUser(String name){
-        return userRepository.findById(Long.valueOf(name)).get();
+        return userRepository.findByUsername(name).get();
     }
 
     private void propertyVerify(Property property){

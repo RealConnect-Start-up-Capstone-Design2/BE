@@ -1,16 +1,15 @@
 package com.example.RealConnect.property.controller;
 
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
+import com.example.RealConnect.property.domain.dto.PropertyResponseDto;
 import com.example.RealConnect.property.domain.dto.PropertyStatusDto;
 import com.example.RealConnect.property.exception.ApartmentNotMatchException;
 import com.example.RealConnect.property.exception.PropertyNotMatchException;
 import com.example.RealConnect.property.service.PropertyModifyService;
 import com.example.RealConnect.user.domain.User;
-import com.example.RealConnect.user.exception.PasswordNotMatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 
 @RestController
@@ -21,10 +20,10 @@ public class PropertyModifyController {
 
     // 매물 정보 수정
     @PutMapping("/api/properties/{aId}")
-    public ResponseEntity<String> modify(@PathVariable("aId") Long id, @RequestBody PropertyRequestDto propertyRequestDto, Principal principal) {
+    public ResponseEntity<PropertyResponseDto> modify(@PathVariable("aId") Long id, @RequestBody PropertyRequestDto propertyRequestDto, Principal principal) {
         User agent = propertyModifyService.findUser(principal.getName());
-        propertyModifyService.modify(id, propertyRequestDto, agent);
-        return ResponseEntity.ok("매물 정보 수정 성공!");
+        PropertyResponseDto responseDto = propertyModifyService.modify(id, propertyRequestDto, agent);
+        return ResponseEntity.ok(responseDto);
     }
 
     // 매물 상태 변경
@@ -49,7 +48,7 @@ public class PropertyModifyController {
     /**
      * 아파트가 없을 경우
      * @param error
-     * @return 400
+     * @return 409
      */
     @ExceptionHandler({ApartmentNotMatchException.class})
     public ResponseEntity<String> handleApartmentNotFind(ApartmentNotMatchException error) {

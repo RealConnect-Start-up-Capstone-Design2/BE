@@ -1,10 +1,9 @@
 package com.example.RealConnect.property.controller;
 
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
+import com.example.RealConnect.property.domain.dto.PropertyResponseDto;
 import com.example.RealConnect.property.exception.ApartmentNotMatchException;
 import com.example.RealConnect.property.service.PropertyPostService;
-import com.example.RealConnect.user.domain.User;
-import com.example.RealConnect.user.exception.PasswordNotMatchException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +20,10 @@ public class PropertyPostController {
 
     private final PropertyPostService propertyPostService;
 
-    @PostMapping("api/properties/add")
-    public ResponseEntity<String> saveProperty(@RequestBody @Valid PropertyRequestDto propertyRequestDto, Principal principal){
-        propertyPostService.save(propertyRequestDto, principal.getName());
-        return ResponseEntity.ok("저장 성공!");
+    @PostMapping("api/properties")
+    public ResponseEntity<PropertyResponseDto> saveProperty(@RequestBody @Valid PropertyRequestDto propertyRequestDto, Principal principal){
+        PropertyResponseDto dto = propertyPostService.save(propertyRequestDto, principal.getName());
+        return ResponseEntity.ok(dto);
     }
 
     /**

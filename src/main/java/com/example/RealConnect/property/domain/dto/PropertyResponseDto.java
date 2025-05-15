@@ -1,5 +1,6 @@
 package com.example.RealConnect.property.domain.dto;
 
+import com.example.RealConnect.property.domain.Property;
 import com.example.RealConnect.property.domain.PropertyStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,12 +15,6 @@ public class PropertyResponseDto {
 
     // 아파트
     private String apartmentName;
-    private String apartmentAddress;
-
-    // 중개사
-    private Long agentId;
-    private String agentName;
-    private String agentEmail;
 
     // 소유자
     private String ownerName;
@@ -29,8 +24,6 @@ public class PropertyResponseDto {
     private String tenantName;
     private String tenantPhone;
 
-    // 거래
-    private boolean isSale;
     private Long salePrice;
 
     private boolean isJeonse;
@@ -43,4 +36,21 @@ public class PropertyResponseDto {
     // 상태 및 메모
     private PropertyStatus status;
     private String memo;
+
+    public PropertyResponseDto(Property property) {
+        this.id = property.getId();
+        this.apartmentName = property.getApartment().getName();
+        this.ownerName = property.getOwnerName();
+        this.ownerPhone = property.getOwnerPhone();
+        this.tenantName = property.getTenantName();
+        this.tenantPhone = property.getTenantPhone();
+        this.salePrice = property.getSalePrice();
+        this.isJeonse = property.isJeonse();
+        this.jeonsePrice = property.getJeonsePrice();
+        this.isMonth = property.isMonth();
+        this.deposit = property.getDeposit();
+        this.monthPrice = property.getMonthPrice();
+        this.status = property.getStatus();
+        this.memo = property.getMemo();
+    }
 }

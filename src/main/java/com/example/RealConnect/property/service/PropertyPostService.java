@@ -4,9 +4,11 @@ import com.example.RealConnect.apartment.repository.ApartmentRepository;
 import com.example.RealConnect.property.domain.Property;
 import com.example.RealConnect.property.domain.PropertyStatus;
 import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
+import com.example.RealConnect.property.domain.dto.PropertyResponseDto;
 import com.example.RealConnect.property.exception.ApartmentNotMatchException;
 import com.example.RealConnect.property.repository.PropertyRepository;
 import com.example.RealConnect.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.RealConnect.apartment.domain.Apartment;
@@ -21,9 +23,9 @@ public class PropertyPostService {
     private final UserRepository userRepository;
     private final ApartmentRepository apartmentRepository;
 
-    public boolean save(PropertyRequestDto dto, String name) {
+    public PropertyResponseDto save(PropertyRequestDto dto, String name) {
         Apartment apartment = apartmentRepository.findById(dto.getApartmentId())
-                .orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("아파트 아이디가 없습니다."));
         User agent = findUser(name);
 
         apartmentVerify(apartment);
@@ -47,7 +49,7 @@ public class PropertyPostService {
                 .build();
 
         propertyRepository.save(property);
-        return true;
+        return new PropertyResponseDto(property);
     }
 
     public User findUser(String name){

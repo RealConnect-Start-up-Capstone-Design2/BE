@@ -81,8 +81,6 @@ public class Property {
 
     // Entity 수정
     public void update(PropertyRequestDto dto, Apartment apartment, User agent) {
-        this.apartment = apartment;
-        this.agent = agent;
         this.ownerName = dto.getOwnerName();
         this.ownerPhone = dto.getOwnerPhone();
         this.tenantName = dto.getTenantName();
