@@ -8,8 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PropertyStatusDto {
-    @NotNull(message = "매물 아이디를 작성하세요.")
-    private Long id;
+
     @NotNull(message = "상태를 작성하세요.")
-    private PropertyStatus Status;
+    private int status;
 }

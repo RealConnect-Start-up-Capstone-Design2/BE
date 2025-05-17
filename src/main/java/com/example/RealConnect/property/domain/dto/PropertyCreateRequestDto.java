@@ -9,7 +9,7 @@ import lombok.Setter;
 // property 등록 및 수정
 @Getter
 @Setter
-public class PropertyRequestDto {
+public class PropertyCreateRequestDto {
     // 아파트 id
     @NotNull(message = "아파트 아이디를 입력하세요.")
     private Long apartmentId;
@@ -26,16 +26,10 @@ public class PropertyRequestDto {
     @NotBlank(message = "임차인 전화번호를 입력하세요.")
     private String tenantPhone;
 
-    // 거래
-    @NotNull(message = "거래 상태를 입력하세요.")
-    private boolean isSale;
-    @NotNull(message = "거래 가격을 입력하세요.")
     private Long salePrice;
 
-    private boolean isJeonse;
     private Long jeonsePrice;
 
-    private boolean isMonth;
     private Long deposit;
     private Long monthPrice;
 
