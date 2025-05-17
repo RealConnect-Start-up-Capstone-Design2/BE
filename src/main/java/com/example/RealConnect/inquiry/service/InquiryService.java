@@ -71,12 +71,14 @@ public class InquiryService {
     3. 진행 상채 드롭박스로 검색(전체, 진행 중, 진행 완료)
      */
     @Transactional(readOnly = true)
-    public List<InquiryResponseDto> searchInquiries(String username, String status, String inquiryType, String keyword) {
+    public List<InquiryResponseDto> searchInquiries(String username, String status, String inquiryType,
+                                                    String keyword, Boolean favoriteOnly) {
 
         User agent = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("해당 중개사를 찾을 수 없습니다."));
 
-        List<Inquiry> inquiries = inquiryRepository.searchInquiriesByCondition(agent.getId(), status, inquiryType, keyword);
+        List<Inquiry> inquiries = inquiryRepository.searchInquiriesByCondition(agent.getId(), status, inquiryType,
+                keyword, favoriteOnly);
 
         return inquiries.stream()
                 .map(InquiryResponseDto::from)

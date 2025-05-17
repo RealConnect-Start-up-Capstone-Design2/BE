@@ -14,7 +14,8 @@ public class InquiryRepositoryImpl implements InquiryRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Inquiry> searchInquiriesByCondition(Long agentId, String status, String inquiryType, String keyword) {
+    public List<Inquiry> searchInquiriesByCondition(Long agentId, String status, String inquiryType,
+                                                    String keyword, Boolean favoriteOnly) {
         return queryFactory
                 .selectFrom(inquiry)
                 .where(
@@ -22,7 +23,8 @@ public class InquiryRepositoryImpl implements InquiryRepositoryCustom{
                         status != null ? inquiry.status.stringValue().eq(status) : null,
                         inquiryType != null ? inquiry.type.stringValue().eq(inquiryType) : null,
                         keyword != null ? inquiry.name.containsIgnoreCase(keyword)
-                                .or(inquiry.apartmentName.containsIgnoreCase(keyword)) : null
+                                .or(inquiry.apartmentName.containsIgnoreCase(keyword)) : null,
+                        favoriteOnly != null && favoriteOnly ? inquiry.favorite.isTrue() : null
                 )
                 .fetch();
     }

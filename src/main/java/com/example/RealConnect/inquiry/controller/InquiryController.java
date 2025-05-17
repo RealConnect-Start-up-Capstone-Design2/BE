@@ -58,6 +58,7 @@ public class InquiryController {
             @RequestParam(required = false) String status, // 진행 상태 드롭박스
             @RequestParam(required = false) String inquiryType, // 문의 우형 드롭박스
             @RequestParam(required = false) String keyword, // 통합검색 시 검색어
+            @RequestParam(required = false) Boolean favoriteOnly, // 즐겨찾기로 등록된 문의들만 조회
             @AuthenticationPrincipal User userDetails
     ) {
         //
@@ -69,7 +70,8 @@ public class InquiryController {
         String filterKeyword = (keyword == null || keyword.isBlank()) ? null : keyword;
 
         // 조건을 받아서 service에서 처리
-        List<InquiryResponseDto> result = inquiryService.searchInquiries(username, filterStatus, filterType, filterKeyword);
+        List<InquiryResponseDto> result = inquiryService.searchInquiries(username, filterStatus,
+                filterType, filterKeyword, favoriteOnly);
 
         // 검색 결과를 json으로 응답 - 프론트에서 바로 리스트 보여줄 수 있게 함.
         return ResponseEntity.ok(result);
