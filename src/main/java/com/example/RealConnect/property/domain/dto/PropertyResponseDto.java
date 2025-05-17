@@ -4,12 +4,14 @@ import com.example.RealConnect.property.domain.Property;
 import com.example.RealConnect.property.domain.PropertyStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 // property 조회
 @Getter
 @Builder
+@AllArgsConstructor
 public class PropertyResponseDto {
     private Long id;
 
