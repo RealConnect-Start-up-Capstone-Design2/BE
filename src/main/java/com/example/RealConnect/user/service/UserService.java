@@ -29,6 +29,7 @@ public class UserService {
                 .username(userRegisterDto.getUsername())
                 .password(passwordEncoder.encode(userRegisterDto.getPassword()))
                 .name(userRegisterDto.getName())
+                .email(userRegisterDto.getEmail())
                 .role(Role.BASIC)
                 .build();
         userRepository.save(user);
