@@ -1,9 +1,6 @@
 package com.example.RealConnect.apartment.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 /**
@@ -46,6 +43,7 @@ public class Apartment {
     /*
         방향(8)
      */
+    @Enumerated(value = EnumType.STRING)
     private Direction direction;
 
     /*
