@@ -3,15 +3,15 @@ package com.example.RealConnect.inquiry.controller;
 import com.example.RealConnect.inquiry.domain.dto.InquiryCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryResponseDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryUpdateRequest;
+import com.example.RealConnect.inquiry.exception.AccessDeniedException;
+import com.example.RealConnect.inquiry.exception.InquiryNotFoundException;
 import com.example.RealConnect.inquiry.service.InquiryService;
-import com.example.RealConnect.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.AccessDeniedException;
+import java.security.Principal;
 import java.util.List;
 
 // 프론트에서의 요청 수신, DTO매핑, 응답 전송
@@ -32,12 +32,11 @@ public class InquiryController {
     @PostMapping
     public ResponseEntity<InquiryResponseDto> registerInquiry(
             @RequestBody InquiryCreateRequestDto dto,
-            @AuthenticationPrincipal User userDetails
+            Principal principal
     ) {
-        String username = userDetails.getUsername(); // ID
 
         // 서비스 호출
-        InquiryResponseDto response = inquiryService.register(dto, username);
+        InquiryResponseDto response = inquiryService.register(dto, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -59,10 +58,8 @@ public class InquiryController {
             @RequestParam(required = false) String inquiryType, // 문의 우형 드롭박스
             @RequestParam(required = false) String keyword, // 통합검색 시 검색어
             @RequestParam(required = false) Boolean favoriteOnly, // 즐겨찾기로 등록된 문의들만 조회
-            @AuthenticationPrincipal User userDetails
+            Principal principal
     ) {
-        //
-        String username = userDetails.getUsername();
 
         // 드롭박스에서 '전체'가 입력되면 조건 적용하지 않도록 null 처리
         String filterStatus = "전체".equalsIgnoreCase(status) ? null : status;
@@ -70,7 +67,7 @@ public class InquiryController {
         String filterKeyword = (keyword == null || keyword.isBlank()) ? null : keyword;
 
         // 조건을 받아서 service에서 처리
-        List<InquiryResponseDto> result = inquiryService.searchInquiries(username, filterStatus,
+        List<InquiryResponseDto> result = inquiryService.searchInquiries(principal.getName(), filterStatus,
                 filterType, filterKeyword, favoriteOnly);
 
         // 검색 결과를 json으로 응답 - 프론트에서 바로 리스트 보여줄 수 있게 함.
@@ -84,14 +81,12 @@ public class InquiryController {
     public ResponseEntity<InquiryResponseDto> updateInquiry(
             @PathVariable("inquiryId") Long inquiryId,
             @RequestBody InquiryUpdateRequest dto,
-            @AuthenticationPrincipal User userDetails
-    ) throws Exception{
-        //
-        String username = userDetails.getUsername();
+            Principal principal
+    )
+    {
         // 수정 진행
-        InquiryResponseDto updated = inquiryService.updateInquiry(inquiryId, dto, username);
+        InquiryResponseDto updated = inquiryService.updateInquiry(inquiryId, dto, principal.getName());
 
-        //
         return ResponseEntity.ok(updated);
     }
 
@@ -101,12 +96,35 @@ public class InquiryController {
     @DeleteMapping("/{inquiryId}")
     public ResponseEntity<Void> deleteInquiry(
             @PathVariable Long inquiryId,
-            @AuthenticationPrincipal User userDetails
-    ) throws AccessDeniedException {
-        //
-        String username = userDetails.getUsername();
-        inquiryService.deleteInquiry(inquiryId, username);
+            Principal principal
+    )
+    {
+        inquiryService.deleteInquiry(inquiryId, principal.getName());
 
         return ResponseEntity.noContent().build(); // 204 No Content
+    }
+
+    /**
+     * 문의 ID가 존재하지 않는 경우
+     * @param e
+     * @return 400
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InquiryNotFoundException.class)
+    public String handleInquiryNotFound(InquiryNotFoundException e)
+    {
+        return e.getMessage();
+    }
+
+    /**
+     * 문의 수정 권한이 없는 경우
+     * @param e
+     * @return
+     */
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AccessDeniedException.class)
+    public String handleAccessDenied(AccessDeniedException e)
+    {
+        return e.getMessage();
     }
 }

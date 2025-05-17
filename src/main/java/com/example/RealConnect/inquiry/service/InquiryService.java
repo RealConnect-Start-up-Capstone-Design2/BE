@@ -4,6 +4,8 @@ import com.example.RealConnect.inquiry.domain.Inquiry;
 import com.example.RealConnect.inquiry.domain.dto.InquiryCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryResponseDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryUpdateRequest;
+import com.example.RealConnect.inquiry.exception.AccessDeniedException;
+import com.example.RealConnect.inquiry.exception.InquiryNotFoundException;
 import com.example.RealConnect.inquiry.repository.InquiryRepository;
 import com.example.RealConnect.user.domain.User;
 import com.example.RealConnect.user.repository.UserRepository;
@@ -13,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.RealConnect.inquiry.domain.InquiryType;
 import com.example.RealConnect.inquiry.domain.InquiryStatus;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,8 +37,7 @@ public class InquiryService {
     @Transactional
     public InquiryResponseDto register(InquiryCreateRequestDto dto, String username) {
         // 1. 중개사 조회
-        User agent = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("해당 중개사를 찾을 수 없습니다."));
+        User agent = userRepository.findByUsername(username).get();
 
         // 2. inquiry entity 생성
         Inquiry inquiry = Inquiry.builder()
@@ -74,8 +74,7 @@ public class InquiryService {
     public List<InquiryResponseDto> searchInquiries(String username, String status, String inquiryType,
                                                     String keyword, Boolean favoriteOnly) {
 
-        User agent = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("해당 중개사를 찾을 수 없습니다."));
+        User agent = userRepository.findByUsername(username).get();
 
         List<Inquiry> inquiries = inquiryRepository.searchInquiriesByCondition(agent.getId(), status, inquiryType,
                 keyword, favoriteOnly);
@@ -99,14 +98,13 @@ public class InquiryService {
      */
 
     @Transactional
-    public InquiryResponseDto updateInquiry(Long inquiryID, InquiryUpdateRequest dto, String username) throws AccessDeniedException {
+    public InquiryResponseDto updateInquiry(Long inquiryID, InquiryUpdateRequest dto, String username) {
 
-        User agent = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("해당 중개사를 찾을 수 없습니다."));
+        User agent = userRepository.findByUsername(username).get();
 
         // 해당 문의 조회
         Inquiry inquiry = inquiryRepository.findById(inquiryID)
-                .orElseThrow(() -> new IllegalArgumentException("해당 문의는 존재하지 않습니다.")); // 예외처리
+                .orElseThrow(() -> new InquiryNotFoundException("존재하지 않는 문의 ID")); // 예외처리
 
         // 중개사 본인 확인 - DB에서 2차 확인
         if (!inquiry.getAgent().getId().equals(agent.getId())) {
@@ -135,13 +133,12 @@ public class InquiryService {
     문의 삭제를 위한 Service
      */
     @Transactional
-    public void deleteInquiry(Long inquiryId, String username) throws AccessDeniedException {
+    public void deleteInquiry(Long inquiryId, String username) {
 
-        User agent = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("해당 중개사를 찾을 수 없습니다."));
+        User agent = userRepository.findByUsername(username).get();
 
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 문의가 존재하지 않습니다."));
+                .orElseThrow(() -> new InquiryNotFoundException("해당 문의가 존재하지 않습니다."));
 
         if (!inquiry.getAgent().getId().equals(agent.getId())) {
             throw new AccessDeniedException("문의 삭제 권한이 없습니다.");
