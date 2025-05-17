@@ -4,12 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
 
 /**
  * 아파트 정보
  *
  */
 @Entity
+@Getter
 public class Apartment {
 
     @Id
