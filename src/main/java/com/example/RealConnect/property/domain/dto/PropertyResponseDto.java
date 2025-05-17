@@ -26,10 +26,8 @@ public class PropertyResponseDto {
 
     private Long salePrice;
 
-    private boolean isJeonse;
     private Long jeonsePrice;
 
-    private boolean isMonth;
     private Long deposit;
     private Long monthPrice;
 
@@ -40,16 +38,20 @@ public class PropertyResponseDto {
     public PropertyResponseDto(Property property) {
         this.id = property.getId();
         this.apartmentName = property.getApartment().getName();
+
         this.ownerName = property.getOwnerName();
         this.ownerPhone = property.getOwnerPhone();
+
         this.tenantName = property.getTenantName();
         this.tenantPhone = property.getTenantPhone();
+
         this.salePrice = property.getSalePrice();
-        this.isJeonse = property.isJeonse();
+
         this.jeonsePrice = property.getJeonsePrice();
-        this.isMonth = property.isMonth();
+
         this.deposit = property.getDeposit();
         this.monthPrice = property.getMonthPrice();
+
         this.status = property.getStatus();
         this.memo = property.getMemo();
     }
