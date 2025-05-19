@@ -1,7 +1,8 @@
 package com.example.RealConnect.property.controller;
 
-import com.example.RealConnect.property.domain.dto.PropertyRequestDto;
+import com.example.RealConnect.property.domain.dto.PropertyCreateRequestDto;
 import com.example.RealConnect.property.domain.dto.PropertyResponseDto;
+import com.example.RealConnect.property.exception.ApartmentNotFoundException;
 import com.example.RealConnect.property.exception.ApartmentNotMatchException;
 import com.example.RealConnect.property.service.PropertyPostService;
 import jakarta.validation.Valid;
@@ -21,8 +22,8 @@ public class PropertyPostController {
     private final PropertyPostService propertyPostService;
 
     @PostMapping("api/properties")
-    public ResponseEntity<PropertyResponseDto> saveProperty(@RequestBody @Valid PropertyRequestDto propertyRequestDto, Principal principal){
-        PropertyResponseDto dto = propertyPostService.save(propertyRequestDto, principal.getName());
+    public ResponseEntity<PropertyResponseDto> saveProperty(@RequestBody @Valid PropertyCreateRequestDto propertyCreateRequestDto, Principal principal){
+        PropertyResponseDto dto = propertyPostService.save(propertyCreateRequestDto, principal.getName());
         return ResponseEntity.ok(dto);
     }
 
@@ -31,8 +32,8 @@ public class PropertyPostController {
      * @param error
      * @return 400
      */
-    @ExceptionHandler({ApartmentNotMatchException.class})
-    public ResponseEntity<String> handleApartmentNotFind(ApartmentNotMatchException error) {
+    @ExceptionHandler({ApartmentNotFoundException.class})
+    public ResponseEntity<String> handleApartmentNotFind(ApartmentNotFoundException error) {
         return ResponseEntity
                 .badRequest()
                 .body(error.getMessage());
