@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -72,6 +75,16 @@ public class Property {
     private Long monthPrice;
 
     /*
+        등록일
+     */
+    private LocalDate startDate;
+
+    /*
+        만기일
+     */
+    private LocalDate endDate;
+
+    /*
         상태
      */
     @Enumerated(EnumType.STRING)
@@ -80,7 +93,7 @@ public class Property {
     private String memo;
 
     // Entity 수정
-    public void update(PropertyRequestDto dto, Apartment apartment, User agent) {
+    public void update(PropertyRequestDto dto) {
         this.ownerName = dto.getOwnerName();
         this.ownerPhone = dto.getOwnerPhone();
         this.tenantName = dto.getTenantName();
@@ -92,6 +105,8 @@ public class Property {
         this.isMonth = dto.isMonth();
         this.deposit = dto.getDeposit();
         this.monthPrice = dto.getMonthPrice();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
         this.status = dto.getStatus() != null ? dto.getStatus() : PropertyStatus.WAITING;
         this.memo = dto.getMemo();
     }

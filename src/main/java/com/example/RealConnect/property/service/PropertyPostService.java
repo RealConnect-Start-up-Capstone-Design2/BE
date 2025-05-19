@@ -44,6 +44,8 @@ public class PropertyPostService {
                 .isMonth(dto.isMonth())
                 .deposit(dto.getDeposit())
                 .monthPrice(dto.getMonthPrice())
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
                 .status(dto.getStatus() != null ? dto.getStatus() : PropertyStatus.WAITING) // 기본값 처리
                 .memo(dto.getMemo())
                 .build();

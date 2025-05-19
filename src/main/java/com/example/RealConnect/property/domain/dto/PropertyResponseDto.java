@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 // property 조회
 @Getter
 @Builder
@@ -33,6 +35,10 @@ public class PropertyResponseDto {
     private Long deposit;
     private Long monthPrice;
 
+    // 등록일, 만기일
+    private LocalDate startDate;
+    private LocalDate endDate;
+
     // 상태 및 메모
     private PropertyStatus status;
     private String memo;
@@ -50,6 +56,8 @@ public class PropertyResponseDto {
         this.isMonth = property.isMonth();
         this.deposit = property.getDeposit();
         this.monthPrice = property.getMonthPrice();
+        this.startDate = property.getStartDate();
+        this.endDate = property.getEndDate();
         this.status = property.getStatus();
         this.memo = property.getMemo();
     }

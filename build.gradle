@@ -43,5 +43,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-def void id(String s) {}
