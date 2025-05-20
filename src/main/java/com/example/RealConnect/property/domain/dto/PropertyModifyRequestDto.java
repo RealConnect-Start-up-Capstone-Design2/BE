@@ -33,6 +33,7 @@ public class PropertyModifyRequestDto {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    @NotBlank(message = "거래 상태를 입력하세요.")
     private PropertyStatus status;
     private String memo;
 }
