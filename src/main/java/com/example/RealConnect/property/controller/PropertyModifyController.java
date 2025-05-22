@@ -1,8 +1,8 @@
 package com.example.RealConnect.property.controller;
 
+import com.example.RealConnect.property.domain.dto.ApartmentPropertyDto;
 import com.example.RealConnect.property.domain.dto.PropertyCreateRequestDto;
 import com.example.RealConnect.property.domain.dto.PropertyModifyRequestDto;
-import com.example.RealConnect.property.domain.dto.PropertyResponseDto;
 import com.example.RealConnect.property.domain.dto.PropertyStatusDto;
 import com.example.RealConnect.property.exception.ApartmentNotMatchException;
 import com.example.RealConnect.property.exception.IllegalPropertyStatusException;
@@ -23,19 +23,12 @@ public class PropertyModifyController {
 
     // 매물 정보 수정
     @PutMapping("/api/properties/{propertyId}")
-    public ResponseEntity<PropertyResponseDto> modify(@PathVariable("propertyId") Long id,
-                                                      @RequestBody PropertyModifyRequestDto propertyModifyRequestDto,
-                                                      Principal principal)
+    public ResponseEntity<ApartmentPropertyDto> modify(@PathVariable("propertyId") Long id,
+                                                       @RequestBody PropertyModifyRequestDto propertyModifyRequestDto,
+                                                       Principal principal)
     {
-        PropertyResponseDto responseDto = propertyModifyService.modify(id, propertyModifyRequestDto, principal.getName());
+        ApartmentPropertyDto responseDto = propertyModifyService.modify(id, propertyModifyRequestDto, principal.getName());
         return ResponseEntity.ok(responseDto);
-    }
-
-    // 매물 상태 변경
-    @PatchMapping("api/property/status/{propertyId}")
-    public ResponseEntity<String> modifyStatus(@PathVariable("propertyId") Long id, @RequestBody PropertyStatusDto propertyStatusDto){
-        propertyModifyService.changeStatus(id, propertyStatusDto);
-        return ResponseEntity.ok("상태 수정 완료!");
     }
 
     /**

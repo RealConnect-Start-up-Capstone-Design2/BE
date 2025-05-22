@@ -28,7 +28,7 @@ public class Property {
     /*
         아파트 정보
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Apartment apartment;
 
@@ -102,7 +102,7 @@ public class Property {
         this.monthPrice = dto.getMonthPrice();
         this.startDate = dto.getStartDate();
         this.endDate = dto.getEndDate();
-        this.status = dto.getStatus() != null ? dto.getStatus() : PropertyStatus.WAITING;
+        this.status = dto.getStatus();
         this.memo = dto.getMemo();
     }
 

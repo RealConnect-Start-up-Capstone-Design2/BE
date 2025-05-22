@@ -1,5 +1,6 @@
 package com.example.RealConnect.property.repository;
 
+import com.example.RealConnect.apartment.domain.Apartment;
 import com.example.RealConnect.property.domain.Property;
 import com.example.RealConnect.user.domain.User;
 import io.micrometer.common.lang.NonNull;
@@ -12,4 +13,6 @@ public interface PropertyRepository extends JpaRepository<Property, Long> {
     List<Property> findAll();
 
     List<Property> findAllByAgent(User agent);
+
+    boolean existsByApartmentAndAgent(Apartment apartment, User agent);
 }

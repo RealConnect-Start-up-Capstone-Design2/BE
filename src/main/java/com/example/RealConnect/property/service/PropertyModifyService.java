@@ -1,14 +1,8 @@
 package com.example.RealConnect.property.service;
 
-import com.example.RealConnect.apartment.repository.ApartmentRepository;
 import com.example.RealConnect.property.domain.Property;
-import com.example.RealConnect.property.domain.PropertyStatus;
-import com.example.RealConnect.property.domain.dto.PropertyCreateRequestDto;
+import com.example.RealConnect.property.domain.dto.ApartmentPropertyDto;
 import com.example.RealConnect.property.domain.dto.PropertyModifyRequestDto;
-import com.example.RealConnect.property.domain.dto.PropertyResponseDto;
-import com.example.RealConnect.property.domain.dto.PropertyStatusDto;
-import com.example.RealConnect.property.exception.ApartmentNotFoundException;
-import com.example.RealConnect.property.exception.IllegalPropertyStatusException;
 import com.example.RealConnect.property.exception.PropertyNotFoundException;
 import com.example.RealConnect.property.exception.PropertyNotMatchException;
 import com.example.RealConnect.property.repository.PropertyRepository;
@@ -27,7 +21,7 @@ public class PropertyModifyService {
 
     // 매물 정보 수정
     @Transactional
-    public PropertyResponseDto modify(Long propertyId, PropertyModifyRequestDto dto, String username){
+    public ApartmentPropertyDto modify(Long propertyId, PropertyModifyRequestDto dto, String username){
 
         User user = userRepository.findByUsername(username).get();
 
@@ -38,31 +32,7 @@ public class PropertyModifyService {
 
         property.update(dto);
 
-        return new PropertyResponseDto(property);
-    }
-
-    // 매물 상태 변경
-    @Transactional
-    public boolean changeStatus(Long propertyId, PropertyStatusDto dto){
-        Property property = findPropertyOrThrow(propertyId);
-
-        PropertyStatus st;
-        if(dto.getStatus()==0)
-        {
-            st = PropertyStatus.WAITING;
-        }
-        else if(dto.getStatus()==1)
-        {
-            st = PropertyStatus.RESERVED;
-        }
-        else if(dto.getStatus()==2)
-        {
-            st = PropertyStatus.CONTRACTED;
-        }
-        else throw new IllegalPropertyStatusException("잘못된 상태 변경");
-
-        property.changeStatus(st);
-        return true;
+        return ApartmentPropertyDto.toDto(property, property.getApartment());
     }
 
     /**
