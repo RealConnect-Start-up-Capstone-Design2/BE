@@ -9,6 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -25,7 +28,7 @@ public class Property {
     /*
         아파트 정보
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false)
     private Apartment apartment;
 
@@ -70,6 +73,16 @@ public class Property {
     private Long monthPrice;
 
     /*
+        등록일
+     */
+    private LocalDate startDate;
+
+    /*
+        만기일
+     */
+    private LocalDate endDate;
+
+    /*
         상태
      */
     @Enumerated(EnumType.STRING)
@@ -87,6 +100,9 @@ public class Property {
         this.jeonsePrice = dto.getJeonsePrice();
         this.deposit = dto.getDeposit();
         this.monthPrice = dto.getMonthPrice();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+        this.status = dto.getStatus();
         this.memo = dto.getMemo();
     }
 

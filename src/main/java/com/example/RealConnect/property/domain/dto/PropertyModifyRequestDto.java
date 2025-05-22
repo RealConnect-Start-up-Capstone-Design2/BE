@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 // property 등록 및 수정
 @Getter
 @Setter
@@ -27,5 +29,10 @@ public class PropertyModifyRequestDto {
     private Long deposit;
     private Long monthPrice;
 
+    // 등록일, 만기일
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    private PropertyStatus status;
     private String memo;
 }
