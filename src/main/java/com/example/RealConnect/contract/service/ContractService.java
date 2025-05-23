@@ -1,6 +1,8 @@
 package com.example.RealConnect.contract.service;
 
 import com.example.RealConnect.contract.domain.*;
+import com.example.RealConnect.contract.repository.ContractRepository;
+import com.example.RealConnect.contract.repository.ContractRepositoryCustom;
 import com.example.RealConnect.inquiry.domain.Inquiry;
 import com.example.RealConnect.inquiry.repository.InquiryRepository;
 import com.example.RealConnect.property.domain.Property;
@@ -9,6 +11,7 @@ import com.example.RealConnect.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,7 +54,14 @@ public class ContractService {
 
     // 조건 기반 계약 검색 - QueryDSL 기반
     public List<ContractResponseDto> searchContracts(Boolean favorite, String type, String keyword){
+        List<Contract> contracts = contractRepository.searchContracts(favorite, type, keyword);
+        List<ContractResponseDto> dtos = new ArrayList<>();
+        for(Contract contract : contracts){
+            ContractResponseDto dto = ContractResponseDto.toDto(contract);
+            dtos.add(dto);
+        }
 
+        return dtos;
     }
     //
 }

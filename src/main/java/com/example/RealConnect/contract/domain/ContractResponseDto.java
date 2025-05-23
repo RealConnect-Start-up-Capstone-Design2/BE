@@ -29,4 +29,27 @@ public class ContractResponseDto {
 
     private ContractStatus contractStatus;
     private boolean favorite;
+
+    public static ContractResponseDto toDto(Contract contract){
+        return ContractResponseDto.builder()
+                .id(contract.getId())
+                .apartment(contract.getApartment())
+                .dong(contract.getDong())
+                .ho(contract.getHo())
+                .area(contract.getArea())
+
+                .ownerName(contract.getOwnerName())
+                .tenantName(contract.getTenantName())
+
+                .contractType(contract.getType())
+                .contractPrice(contract.getPrice())
+
+                .contractDate(LocalDate.from(contract.getContractDate()))
+                .dueDate(LocalDate.from(contract.getExpireDate()))
+
+                .contractStatus(contract.getStatus())
+                .favorite(contract.isFavorite())
+                .build();
+
+    }
 }

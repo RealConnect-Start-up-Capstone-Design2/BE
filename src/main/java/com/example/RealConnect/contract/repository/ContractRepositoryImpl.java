@@ -16,6 +16,5 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom{
     @Override
     public List<Contract> searchContracts(Boolean favorite, String type, String keyword){
 
-
     }
 }
