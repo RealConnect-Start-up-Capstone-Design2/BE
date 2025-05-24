@@ -24,4 +24,11 @@ public class ContractPostRequestDto {
     private LocalDate contractDate;  // 계약일
     private LocalDate dueDate;       // 만기일
     private boolean favorite;       // 즐겨찾기 여부
+
+    // 계액 등록 시 공인중개사가 직접 입력; 문의 관리에서 계약으로 넘어오는 경우에만 사용
+    private String apartment;
+    private String Dong;
+    private String Ho;
+    private String area;
+    private String ownerName;
 }

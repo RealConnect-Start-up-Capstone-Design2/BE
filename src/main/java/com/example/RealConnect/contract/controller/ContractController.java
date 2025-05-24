@@ -17,19 +17,24 @@ public class ContractController {
 
     private final ContractService contractService;
 
-    // 계약 등록 - ContractPostResponseDto 받아서 처리
-    // propertyID, inquiryID를 통해 Property, Inquiry 엔티티 조회해서 Contract 생성 후 저장
+    // 1. 매물 관리에서 계약 등록 - ContractPostResponseDto 받아서 처리
     // requestbody - json으로 전달되는 데이터를 dto로 바인딩
-    @PostMapping
-    public ResponseEntity<Void> registerContract(@RequestBody ContractPostRequestDto dto) {
-        contractService.registerContract(dto);
+    @PostMapping("/api/registerFromProperty")
+    public ResponseEntity<Void> registerContractFromProperty(@RequestBody ContractPostRequestDto dto) {
+        contractService.registerContractFromProperty(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // 2. 문의 관리에서 계약 등록
+    @PostMapping("/api/registerFromInquiry")
+    public ResponseEntity<Void> registerContractFromInquiry(@RequestBody ContractPostRequestDto dto) {
+        contractService.registerContractFromInquiry(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
     // 계약 조회의 종류 - 전체 / 즐겨찾기 / 계약 상태 / 통합 검색
     // 계약 전체 조회
-    @GetMapping
+    @GetMapping("/api/searchContracts")
     public ResponseEntity<List<ContractResponseDto>> getContracts(
             @RequestParam(required = false) Boolean favorite, // 즐겨찾기
             @RequestParam(required = false) String type, //거래 유형 - 드롭박스
