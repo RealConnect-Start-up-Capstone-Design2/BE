@@ -17,6 +17,14 @@ public class ContractController {
 
     private final ContractService contractService;
 
+    // 매물관리, 문의관리를 거치지 않고 바로 계약등록
+    @PostMapping("/api/registerDirect")
+    public ResponseEntity<Void> registerDirectContract(@RequestBody ContractPostRequestDto dto) {
+        contractService.registerDirectContract(dto);  // 직접 계약 등록
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
     // 1. 매물 관리에서 계약 등록 - ContractPostResponseDto 받아서 처리
     // requestbody - json으로 전달되는 데이터를 dto로 바인딩
     @PostMapping("/api/registerFromProperty")

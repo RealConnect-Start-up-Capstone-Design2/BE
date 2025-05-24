@@ -21,6 +21,30 @@ public class ContractService {
     private final PropertyRepository propertyRepository;
     private final InquiryRepository inquiryRepository;
 
+
+    // 매물관리, 문의관리를 거치지 않고 계약을 바로 작성하는 경우
+    public void registerDirectContract(ContractPostRequestDto dto) {
+        // 계약 생성
+        Contract contract = new Contract();
+
+        contract.setApartment(dto.getApartment());  // 직접 입력받은 아파트명
+        contract.setDong(dto.getDong());            // 동
+        contract.setHo(dto.getHo());                // 호
+        contract.setArea(dto.getArea());            // 면적
+        contract.setOwnerName(dto.getOwnerName());  // 소유자 이름
+        contract.setTenantName(dto.getTenantName()); // 임차인 이름
+
+        contract.setPrice(dto.getContractPrice());  // 계약 금액
+        contract.setContractDate(dto.getContractDate().atStartOfDay()); // 계약일
+        contract.setExpireDate(dto.getDueDate().atStartOfDay());       // 만기일
+        contract.setType(ContractType.valueOf(dto.getContractType())); // 계약 유형
+        contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
+        contract.setFavorite(dto.isFavorite());   // 즐겨찾기 여부
+
+        // 계약 저장
+        contractRepository.save(contract);
+    }
+
     // 1. 매물 관리에서 -> 계약 등록
     public void registerContractFromProperty(ContractPostRequestDto dto){
 
@@ -49,7 +73,7 @@ public class ContractService {
         contractRepository.save(contract);
     }
 
-    // 문의 관리에서 -> 계약등록
+    // 2. 문의 관리에서 -> 계약등록
     public void registerContractFromInquiry(ContractPostRequestDto dto) {
         // 문의 정보 가져오기
         Inquiry inquiry = inquiryRepository.findById(dto.getInquiryId())
