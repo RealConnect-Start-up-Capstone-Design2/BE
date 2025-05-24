@@ -1,6 +1,7 @@
 package com.example.RealConnect.contract.service;
 
 import com.example.RealConnect.contract.domain.*;
+import com.example.RealConnect.contract.repository.ContractRepository;
 import com.example.RealConnect.inquiry.domain.Inquiry;
 import com.example.RealConnect.inquiry.repository.InquiryRepository;
 import com.example.RealConnect.property.domain.Property;
@@ -41,7 +42,7 @@ public class ContractService {
         contract.setPrice(dto.getContractPrice());
         contract.setContractDate(dto.getContractDate().atStartOfDay());
         contract.setExpireDate(dto.getDueDate().atStartOfDay());
-        contract.setType(ContractType.valueOf(dto.getContractType()));
+        contract.setType(ContractType.valueOf(String.valueOf(dto.getContractType())));
         contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
         contract.setFavorite(dto.isFavorite());
         contract.setAgent(agent);

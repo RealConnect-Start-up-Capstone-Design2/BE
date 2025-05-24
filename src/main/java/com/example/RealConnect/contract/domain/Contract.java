@@ -15,9 +15,9 @@ public class Contract {
     private Long id; // 식별자
 
     private String apartment; // 단지명
-    private Integer dong; // 동
-    private Integer ho; // 호
-    private double area; // 면적
+    private String dong; // 동
+    private String ho; // 호
+    private String area; // 면적
 
     private String ownerName; // 소유주(매도인)
     private String tenantName; // 임차인(매수인)
