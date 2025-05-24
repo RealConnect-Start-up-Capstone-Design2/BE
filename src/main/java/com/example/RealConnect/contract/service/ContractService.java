@@ -37,7 +37,7 @@ public class ContractService {
         contract.setPrice(dto.getContractPrice());  // 계약 금액
         contract.setContractDate(dto.getContractDate().atStartOfDay()); // 계약일
         contract.setExpireDate(dto.getDueDate().atStartOfDay());       // 만기일
-        contract.setType(ContractType.valueOf(dto.getContractType())); // 계약 유형
+        contract.setType(ContractType.valueOf(String.valueOf(dto.getContractType()))); // 계약 유형
         contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
         contract.setFavorite(dto.isFavorite());   // 즐겨찾기 여부
 
