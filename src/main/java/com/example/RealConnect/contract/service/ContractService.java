@@ -13,6 +13,7 @@ import com.example.RealConnect.user.domain.User;
 import com.example.RealConnect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,9 @@ public class ContractService {
 
 
     // 계약 생성(등록) - 매물관리, 문의관리를 거치지 않고 계약을 바로 작성하는 경우
+    @Transactional
     public void registerDirectContract(ContractPostRequestDto dto, String username) {
 
-        // 중개사 조회
         User user = userRepository.findByUsername(username).get();
 
         // 계약 생성
@@ -57,13 +58,16 @@ public class ContractService {
     }
 
     // 1. 매물 관리에서 -> 계약 등록
-    public void registerContractFromProperty(ContractPostRequestDto dto, String username) {
+    @Transactional
+    public void registerContractFromProperty(ContractPostRequestDto dto, String username){
 
         // 매물 정보 가져오기
         Property property = propertyRepository.findById(dto.getPropertyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 매물을 찾을 수 없습니다."));
 
+        //
         User user = userRepository.findByUsername(username).get();
+
         // 매물 소유자 권한 확인
         verifyPropertyOwner(property, user);
 
@@ -92,12 +96,14 @@ public class ContractService {
     }
 
     // 2. 문의 관리에서 -> 계약등록
+    @Transactional
     public void registerContractFromInquiry(ContractPostRequestDto dto, String username) {
         // 문의 정보 가져오기
         Inquiry inquiry = inquiryRepository.findById(dto.getInquiryId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 문의를 찾을 수 없습니다."));
 
         User user = userRepository.findByUsername(username).get();
+
         // 문의 작성자 권한 확인
         verifyInquiryOwner(inquiry, user);
 
@@ -128,6 +134,7 @@ public class ContractService {
     }
 
     // 2. 조건 기반 계약 검색 - QueryDSL 기반
+    @Transactional(readOnly = true)
     public List<ContractResponseDto> searchContracts(Boolean favorite, String type, String keyword){
         List<Contract> contracts = contractRepository.searchContracts(favorite, type, keyword);
         List<ContractResponseDto> dtos = new ArrayList<>();
@@ -140,12 +147,14 @@ public class ContractService {
     }
 
     // 계약 수정 - 계약 수정에 대한 권한이 있는지 검증 후 계약 수정
+    @Transactional
     public void updateContract(Long contractId, ContractPostRequestDto dto, String username) {
         // 계약 정보 가져오기
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 계약을 찾을 수 없습니다.")); // 계약이 존재하지 않으면 예외 처리
 
         User user = userRepository.findByUsername(username).get();
+
         // 계약 수정 권한 확인
         verifyContractOwner(contract, user);  // 계약 수정 권한 검증
 
@@ -169,6 +178,7 @@ public class ContractService {
 
 
     // 계약 삭제
+    @Transactional
     public void deleteContract(Long contractId){
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 계약을 찾을 수 없습니다."));
@@ -193,6 +203,11 @@ public class ContractService {
 
 
     // property에 대해 요청자가 생성한 것인지 검증
+    /**
+     *
+     * @param property
+     * @param user
+     */
     private void verifyPropertyOwner(Property property, User user) {
         if (!property.getAgent().equals(user)) {
             throw new PropertyNotMatchException("해당 매물 계약 등록 권한이 없습니다.");
@@ -200,6 +215,11 @@ public class ContractService {
     }
 
     // inquiry에 대해 요청자가 생성한 것인지 검증
+    /**
+     *
+     * @param inquiry
+     * @param user
+     */
     private void verifyInquiryOwner(Inquiry inquiry, User user) {
         if (!inquiry.getAgent().equals(user)) {
             throw new InquiryNotMatchException("해당 문의 계약 등록 권한이 없습니다.");
