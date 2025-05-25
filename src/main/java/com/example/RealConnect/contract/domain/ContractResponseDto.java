@@ -1,25 +1,27 @@
 package com.example.RealConnect.contract.domain;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ContractResponseDto {
     // 계약 조회 시 사용
     private Long id;
     private String apartment; // property 엔티티에서 가져옴
-    private Integer dong; // property 엔티티에서 가져옴
-    private Integer ho; // property 엔티티에서 가져옴
-    private double area; // property 엔티티에서 가져옴
+    private String dong; // property 엔티티에서 가져옴
+    private String ho; // property 엔티티에서 가져옴
+    private String area; // property 엔티티에서 가져옴
 
     private String ownerName; // Property.owner로 매핑
+    private String ownerPhone;
+
     private String tenantName;
+    private String tenantPhone;
 
     private ContractType contractType;
     private Long contractPrice;
@@ -30,26 +32,32 @@ public class ContractResponseDto {
     private ContractStatus contractStatus;
     private boolean favorite;
 
-    public static ContractResponseDto toDto(Contract contract){
-        return ContractResponseDto.builder()
-                .id(contract.getId())
-                .apartment(contract.getApartment())
-                .dong(contract.getDong())
-                .ho(contract.getHo())
-                .area(contract.getArea())
+    // toDTO
+    public static ContractResponseDto toDto(Contract contract) {
+        ContractResponseDto dto = new ContractResponseDto();
 
-                .ownerName(contract.getOwnerName())
-                .tenantName(contract.getTenantName())
+        // Contract 엔티티에서 필드 값을 가져와서 DTO에 설정
+        dto.setId(contract.getId());
+        dto.setApartment(contract.getApartment());
+        dto.setDong(contract.getDong());
+        dto.setHo(contract.getHo());
+        dto.setArea(contract.getArea());
 
-                .contractType(contract.getType())
-                .contractPrice(contract.getPrice())
+        dto.setOwnerName(contract.getOwnerName());
+        dto.setOwnerPhone(contract.getOwnerPhone());
 
-                .contractDate(LocalDate.from(contract.getContractDate()))
-                .dueDate(LocalDate.from(contract.getExpireDate()))
+        dto.setTenantName(contract.getTenantName());
+        dto.setTenantPhone(contract.getTenantPhone());
 
-                .contractStatus(contract.getStatus())
-                .favorite(contract.isFavorite())
-                .build();
+        dto.setContractType(contract.getType());
+        dto.setContractPrice(contract.getPrice());
 
+        dto.setContractDate(contract.getContractDate().toLocalDate());
+        dto.setDueDate(contract.getExpireDate().toLocalDate());
+
+        dto.setContractStatus(contract.getStatus());
+        dto.setFavorite(contract.isFavorite());
+
+        return dto;
     }
 }

@@ -46,7 +46,7 @@ public class InquiryService {
                 .phone(dto.getPhone())
                 .type(InquiryType.valueOf(dto.getInquiryType())) //
                 .apartmentName(dto.getApartmentName())
-                .area(dto.getArea())
+                .area(String.valueOf(dto.getArea()))
                 .salePrice(dto.getSalePrice())
                 .jeonsePrice(dto.getJeonsePrice())
                 .deposit(dto.getDeposit())
