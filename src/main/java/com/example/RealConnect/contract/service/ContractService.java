@@ -57,12 +57,13 @@ public class ContractService {
     }
 
     // 1. 매물 관리에서 -> 계약 등록
-    public void registerContractFromProperty(ContractPostRequestDto dto, User user){
+    public void registerContractFromProperty(ContractPostRequestDto dto, String username) {
 
         // 매물 정보 가져오기
         Property property = propertyRepository.findById(dto.getPropertyId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 매물을 찾을 수 없습니다."));
 
+        User user = userRepository.findByUsername(username).get();
         // 매물 소유자 권한 확인
         verifyPropertyOwner(property, user);
 
@@ -91,11 +92,12 @@ public class ContractService {
     }
 
     // 2. 문의 관리에서 -> 계약등록
-    public void registerContractFromInquiry(ContractPostRequestDto dto, User user) {
+    public void registerContractFromInquiry(ContractPostRequestDto dto, String username) {
         // 문의 정보 가져오기
         Inquiry inquiry = inquiryRepository.findById(dto.getInquiryId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 문의를 찾을 수 없습니다."));
 
+        User user = userRepository.findByUsername(username).get();
         // 문의 작성자 권한 확인
         verifyInquiryOwner(inquiry, user);
 
@@ -138,11 +140,12 @@ public class ContractService {
     }
 
     // 계약 수정 - 계약 수정에 대한 권한이 있는지 검증 후 계약 수정
-    public void updateContract(Long contractId, ContractPostRequestDto dto, User user) {
+    public void updateContract(Long contractId, ContractPostRequestDto dto, String username) {
         // 계약 정보 가져오기
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 계약을 찾을 수 없습니다.")); // 계약이 존재하지 않으면 예외 처리
 
+        User user = userRepository.findByUsername(username).get();
         // 계약 수정 권한 확인
         verifyContractOwner(contract, user);  // 계약 수정 권한 검증
 

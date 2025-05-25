@@ -33,9 +33,9 @@ public class ContractController {
     @PostMapping("/api/contract/registerFromProperty")
     public ResponseEntity<Void> registerContractFromProperty(
             @RequestBody ContractPostRequestDto dto,
-            @AuthenticationPrincipal User user)
+            Principal principal)
     {
-        contractService.registerContractFromProperty(dto, user);
+        contractService.registerContractFromProperty(dto, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -43,9 +43,9 @@ public class ContractController {
     @PostMapping("/api/contract/registerFromInquiry")
     public ResponseEntity<Void> registerContractFromInquiry(
             @RequestBody ContractPostRequestDto dto,
-            @AuthenticationPrincipal User user)
+            Principal principal)
     {
-        contractService.registerContractFromInquiry(dto, user);
+        contractService.registerContractFromInquiry(dto, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -66,9 +66,9 @@ public class ContractController {
     public ResponseEntity<Void> updateContract(
             @PathVariable Long contractId,
             @RequestBody ContractPostRequestDto dto,
-            @AuthenticationPrincipal User user // 현재 로그인된 사용자
+            Principal principal // 현재 로그인된 사용자
     ) {
-        contractService.updateContract(contractId, dto, user);  // 계약 존재 여부 및 권한 검증 후 계약 수정
+        contractService.updateContract(contractId, dto, principal.getName());  // 계약 존재 여부 및 권한 검증 후 계약 수정
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();  // 204 No Content 반환
     }
 
