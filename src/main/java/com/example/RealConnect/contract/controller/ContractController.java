@@ -52,4 +52,11 @@ public class ContractController {
         return ResponseEntity.ok(contracts);
     }
 
+    // 계약삭제
+    @DeleteMapping("/api/delete/{contractId}")
+    public ResponseEntity<Void> deleteContract(@PathVariable Long contractId) {
+        contractService.deleteContract(contractId);  // 계약 삭제 처리
+        return ResponseEntity.noContent().build();  // 성공적으로 삭제되면 204 No Content 반환
+    }
+
 }

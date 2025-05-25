@@ -113,5 +113,13 @@ public class ContractService {
 
         return dtos;
     }
-    //
+
+
+    // 계약 삭제
+    public void deleteContract(Long contractId){
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 계약을 찾을 수 없습니다."));
+
+        contractRepository.delete(contract);
+    }
 }
