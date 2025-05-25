@@ -3,11 +3,14 @@ package com.example.RealConnect.contract.controller;
 import com.example.RealConnect.contract.domain.ContractPostRequestDto;
 import com.example.RealConnect.contract.domain.ContractResponseDto;
 import com.example.RealConnect.contract.service.ContractService;
+import com.example.RealConnect.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -19,8 +22,8 @@ public class ContractController {
 
     // 매물관리, 문의관리를 거치지 않고 바로 계약등록
     @PostMapping("/api/registerDirect")
-    public ResponseEntity<Void> registerDirectContract(@RequestBody ContractPostRequestDto dto) {
-        contractService.registerDirectContract(dto);  // 직접 계약 등록
+    public ResponseEntity<Void> registerDirectContract(@RequestBody ContractPostRequestDto dto, Principal principal) {
+        contractService.registerDirectContract(dto, principal.getName());  // 직접 계약 등록
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -28,15 +31,21 @@ public class ContractController {
     // 1. 매물 관리에서 계약 등록 - ContractPostResponseDto 받아서 처리
     // requestbody - json으로 전달되는 데이터를 dto로 바인딩
     @PostMapping("/api/registerFromProperty")
-    public ResponseEntity<Void> registerContractFromProperty(@RequestBody ContractPostRequestDto dto) {
-        contractService.registerContractFromProperty(dto);
+    public ResponseEntity<Void> registerContractFromProperty(
+            @RequestBody ContractPostRequestDto dto,
+            @AuthenticationPrincipal User user)
+    {
+        contractService.registerContractFromProperty(dto, user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // 2. 문의 관리에서 계약 등록
     @PostMapping("/api/registerFromInquiry")
-    public ResponseEntity<Void> registerContractFromInquiry(@RequestBody ContractPostRequestDto dto) {
-        contractService.registerContractFromInquiry(dto);
+    public ResponseEntity<Void> registerContractFromInquiry(
+            @RequestBody ContractPostRequestDto dto,
+            @AuthenticationPrincipal User user)
+    {
+        contractService.registerContractFromInquiry(dto, user);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
