@@ -18,7 +18,10 @@ public class ContractResponseDto {
     private String area; // property 엔티티에서 가져옴
 
     private String ownerName; // Property.owner로 매핑
+    private String ownerPhone;
+
     private String tenantName;
+    private String tenantPhone;
 
     private ContractType contractType;
     private Long contractPrice;
@@ -41,7 +44,10 @@ public class ContractResponseDto {
         dto.setArea(contract.getArea());
 
         dto.setOwnerName(contract.getOwnerName());
+        dto.setOwnerPhone(contract.getOwnerPhone());
+
         dto.setTenantName(contract.getTenantName());
+        dto.setTenantPhone(contract.getTenantPhone());
 
         dto.setContractType(contract.getType());
         dto.setContractPrice(contract.getPrice());

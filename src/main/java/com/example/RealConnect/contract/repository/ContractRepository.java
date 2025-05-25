@@ -7,7 +7,5 @@ import java.util.Optional;
 
 public interface ContractRepository extends JpaRepository<Contract, Long>, ContractRepositoryCustom {
 
-    //Optional<Contract> findById(Long contractId);
-
 // QueryDSL로
 }

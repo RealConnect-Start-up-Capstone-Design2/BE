@@ -32,7 +32,9 @@ public class ContractService {
         contract.setHo(dto.getHo());                // 호
         contract.setArea(dto.getArea());            // 면적
         contract.setOwnerName(dto.getOwnerName());  // 소유자 이름
+        contract.setOwnerPhone(dto.getOwnerPhone());
         contract.setTenantName(dto.getTenantName()); // 임차인 이름
+        contract.setTenantPhone(dto.getTenantPhone());
 
         contract.setPrice(dto.getContractPrice());  // 계약 금액
         contract.setContractDate(dto.getContractDate().atStartOfDay()); // 계약일
@@ -60,8 +62,10 @@ public class ContractService {
         contract.setHo(property.getApartment().getHo());
         contract.setArea(property.getApartment().getArea());
         contract.setOwnerName(property.getOwnerName());
+        contract.setOwnerPhone(property.getOwnerPhone());
 
         contract.setTenantName(dto.getTenantName());
+        contract.setTenantPhone(dto.getTenantPhone());
         contract.setPrice(dto.getContractPrice());
         contract.setContractDate(dto.getContractDate().atStartOfDay());
         contract.setExpireDate(dto.getDueDate().atStartOfDay());
@@ -89,7 +93,10 @@ public class ContractService {
         contract.setHo(dto.getHo());
         contract.setArea(dto.getArea());
         contract.setOwnerName(dto.getOwnerName());
-        contract.setTenantName(dto.getTenantName());
+
+        contract.setTenantName(inquiry.getName()); // 문의자 이름 매핑
+        contract.setTenantPhone(inquiry.getPhone()); // 문의자 연락처 매핑
+
         contract.setPrice(dto.getContractPrice());
         contract.setContractDate(dto.getContractDate().atStartOfDay());
         contract.setExpireDate(dto.getDueDate().atStartOfDay());

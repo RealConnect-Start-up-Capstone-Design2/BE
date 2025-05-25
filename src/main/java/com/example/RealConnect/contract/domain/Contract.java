@@ -22,7 +22,10 @@ public class Contract {
     private String area; // 면적
 
     private String ownerName; // 소유주(매도인)
+    private String ownerPhone; // 소유주(매도인) 연락처
+
     private String tenantName; // 임차인(매수인)
+    private String tenantPhone; // 임차인(매수인) 연락처
 
     @Enumerated(EnumType.STRING)
     private ContractType type; // 매매/전세/월세
