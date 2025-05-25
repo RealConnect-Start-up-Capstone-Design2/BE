@@ -2,11 +2,11 @@ package com.example.RealConnect.inquiry.service;
 
 import com.example.RealConnect.inquiry.domain.Inquiry;
 import com.example.RealConnect.inquiry.domain.InquiryPost;
-import com.example.RealConnect.inquiry.domain.InquiryType;
+
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequest;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostCreateRequestDto;
 import com.example.RealConnect.inquiry.domain.dto.InquiryPostResponseDto;
-import com.example.RealConnect.inquiry.domain.dto.InquiryResponseDto;
+
 import com.example.RealConnect.inquiry.exception.AccessDeniedException;
 import com.example.RealConnect.inquiry.exception.InquiryPostNotFoundException;
 import com.example.RealConnect.inquiry.repository.InquiryPostRepository;
@@ -188,7 +188,7 @@ public class ShareService {
                 .customerName(inquiry.getName())
                 .customerPhone(inquiry.getPhone())
                 .apartmentName(inquiry.getApartmentName())
-                .area(inquiry.getArea())
+                .area(Double.parseDouble(inquiry.getArea()))
                 .salePrice(inquiry.getSalePrice())
                 .jeonsePrice(inquiry.getJeonsePrice())
                 .deposit(inquiry.getDeposit())

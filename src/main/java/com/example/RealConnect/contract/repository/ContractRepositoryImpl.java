@@ -44,7 +44,7 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom{
         // 키워드로 검색(단지명, 임차인 이름)
         if (keyword != null && !keyword.isBlank()) {
             builder.and(
-                    contract.apartmentName.containsIgnoreCase(keyword)
+                    contract.apartment.containsIgnoreCase(keyword)
                             .or(contract.tenantName.containsIgnoreCase(keyword))
             );
         }
