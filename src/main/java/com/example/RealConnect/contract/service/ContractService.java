@@ -5,6 +5,7 @@ import com.example.RealConnect.contract.repository.ContractRepository;
 import com.example.RealConnect.inquiry.domain.Inquiry;
 import com.example.RealConnect.inquiry.repository.InquiryRepository;
 import com.example.RealConnect.property.domain.Property;
+import com.example.RealConnect.property.exception.ContractNotMatchException;
 import com.example.RealConnect.property.exception.InquiryNotMatchException;
 import com.example.RealConnect.property.exception.PropertyNotMatchException;
 import com.example.RealConnect.property.repository.PropertyRepository;
@@ -30,7 +31,7 @@ public class ContractService {
     public void registerDirectContract(ContractPostRequestDto dto, String username) {
 
         // 중개사 조회
-        User agent = userRepository.findByUsername(username).get();
+        User user = userRepository.findByUsername(username).get();
 
         // 계약 생성
         Contract contract = new Contract();
@@ -136,6 +137,33 @@ public class ContractService {
         return dtos;
     }
 
+    // 계약 수정 - 계약 수정에 대한 권한이 있는지 검증 후 계약 수정
+    public void updateContract(Long contractId, ContractPostRequestDto dto, User user) {
+        // 계약 정보 가져오기
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 계약을 찾을 수 없습니다.")); // 계약이 존재하지 않으면 예외 처리
+
+        // 계약 수정 권한 확인
+        verifyContractOwner(contract, user);  // 계약 수정 권한 검증
+
+        // 계약 정보 업데이트
+        contract.setApartment(dto.getApartment());
+        contract.setDong(dto.getDong());
+        contract.setHo(dto.getHo());
+        contract.setArea(dto.getArea());
+        contract.setOwnerName(dto.getOwnerName());
+        contract.setTenantName(dto.getTenantName());
+        contract.setPrice(dto.getContractPrice());
+        contract.setContractDate(dto.getContractDate().atStartOfDay());
+        contract.setExpireDate(dto.getDueDate().atStartOfDay());
+        contract.setType(ContractType.valueOf(String.valueOf(dto.getContractType())));
+        contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
+        contract.setFavorite(dto.isFavorite());
+
+        // 계약 수정 후 저장
+        contractRepository.save(contract);
+    }
+
 
     // 계약 삭제
     public void deleteContract(Long contractId){
@@ -146,6 +174,20 @@ public class ContractService {
     }
 
     //// 검증함수
+
+    // 계약 수정 권한 확인
+    /**
+     * 계약 수정 권한 확인
+     * @param contract
+     * @param user
+     */
+    private void verifyContractOwner(Contract contract, User user) {
+        // 계약의 중개사(또는 작성자)만 수정 가능
+        if (!contract.getAgent().equals(user)) {
+            throw new ContractNotMatchException("계약 수정 권한이 없습니다.");
+        }
+    }
+
 
     // property에 대해 요청자가 생성한 것인지 검증
     private void verifyPropertyOwner(Property property, User user) {
