@@ -34,7 +34,7 @@ public class InquiryResponseDto {
                 .phone(inquiry.getPhone())
                 .inquiryType(String.valueOf(inquiry.getType()))
                 .apartmentName(inquiry.getApartmentName())
-                .area(inquiry.getArea())
+                .area(Double.parseDouble(inquiry.getArea()))
                 .salePrice(inquiry.getSalePrice())
                 .jeonsePrice(inquiry.getJeonsePrice())
                 .deposit(inquiry.getDeposit())
