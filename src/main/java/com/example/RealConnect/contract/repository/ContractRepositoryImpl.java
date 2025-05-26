@@ -1,7 +1,9 @@
 package com.example.RealConnect.contract.repository;
 
+import com.example.RealConnect.contract.Exception.InvalidContractTypeException;
 import com.example.RealConnect.contract.domain.Contract;
 import com.example.RealConnect.contract.domain.ContractType;
+import com.example.RealConnect.user.domain.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,15 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Contract> searchContracts(Boolean favorite, String type, String keyword){
+    public List<Contract> searchContracts(Boolean favorite, String type, String keyword, User user){
 
         // Boolean builder - queryDSL 사용 시 조건을 동적으로 구성할 때 사용하는 유틸리티 클래스
         // and, or 조건 동적으로 추가 가능
         BooleanBuilder builder = new BooleanBuilder();
+
+
+        builder.and(contract.agent.id.eq(user.getId()));  ///
+        System.out.println(user.getUsername());
 
         // 즐겨찾기 여부 필터링
         if(favorite != null){
@@ -37,7 +43,7 @@ public class ContractRepositoryImpl implements ContractRepositoryCustom{
             try {
                 builder.and(contract.type.eq(ContractType.valueOf(type.toUpperCase())));
             } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("유효하지 않은 계약 유형입니다.");
+                throw new InvalidContractTypeException("유효하지 않은 계약 유형입니다.");
             }
         }
 

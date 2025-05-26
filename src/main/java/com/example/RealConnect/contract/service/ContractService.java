@@ -52,6 +52,7 @@ public class ContractService {
         contract.setType(ContractType.valueOf(String.valueOf(dto.getContractType()))); // 계약 유형
         contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
         contract.setFavorite(dto.isFavorite());   // 즐겨찾기 여부
+        contract.setAgent(user);
 
         // 계약 저장
         contractRepository.save(contract);
@@ -135,8 +136,12 @@ public class ContractService {
 
     // 2. 조건 기반 계약 검색 - QueryDSL 기반
     @Transactional(readOnly = true)
-    public List<ContractResponseDto> searchContracts(Boolean favorite, String type, String keyword){
-        List<Contract> contracts = contractRepository.searchContracts(favorite, type, keyword);
+    public List<ContractResponseDto> searchContracts(Boolean favorite, String type, String keyword, String username){
+
+        User user = userRepository.findByUsername(username).get();
+
+        List<Contract> contracts = contractRepository.searchContracts(favorite, type, keyword, user);
+
         List<ContractResponseDto> dtos = new ArrayList<>();
         for(Contract contract : contracts){
             ContractResponseDto dto = ContractResponseDto.toDto(contract);

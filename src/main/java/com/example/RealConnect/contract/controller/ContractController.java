@@ -3,11 +3,11 @@ package com.example.RealConnect.contract.controller;
 import com.example.RealConnect.contract.domain.ContractPostRequestDto;
 import com.example.RealConnect.contract.domain.ContractResponseDto;
 import com.example.RealConnect.contract.service.ContractService;
-import com.example.RealConnect.user.domain.User;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -21,7 +21,7 @@ public class ContractController {
     private final ContractService contractService;
 
     // 매물관리, 문의관리를 거치지 않고 바로 계약등록
-    @PostMapping("/api/contract/registerDirect")
+    @PostMapping("/api/contract")
     public ResponseEntity<Void> registerDirectContract(@RequestBody ContractPostRequestDto dto, Principal principal) {
         contractService.registerDirectContract(dto, principal.getName());  // 직접 계약 등록
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -55,9 +55,11 @@ public class ContractController {
     public ResponseEntity<List<ContractResponseDto>> getContracts(
             @RequestParam(required = false) Boolean favorite, // 즐겨찾기
             @RequestParam(required = false) String type, //거래 유형 - 드롭박스
-            @RequestParam(required = false) String keyword // 통합검색 - 단지명, 임차인 이름 기준 검색
+            @RequestParam(required = false) String keyword, // 통합검색 - 단지명, 임차인 이름 기준 검색
+            Principal principal
     ) {
-        List<ContractResponseDto> contracts = contractService.searchContracts(favorite, type, keyword);
+        List<ContractResponseDto> contracts = contractService.searchContracts(favorite, type, keyword,
+                principal.getName());
         return ResponseEntity.ok(contracts);
     }
 

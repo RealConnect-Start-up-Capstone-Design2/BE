@@ -19,7 +19,7 @@ public class ContractPostRequestDto {
     private String tenantPhone;     // 임차인 연락처
 
     private ContractType contractType;    // BUY / JEONSE / MONTH_RENT
-    private Long contractPrice;     // 매매가 / 전세가 / 월세 (선택적)
+    private String contractPrice;     // 매매가 / 전세가 / 월세 (선택적) 월세인 경우 고려하여 String형으로 변환
 
     private LocalDate contractDate;  // 계약일
     private LocalDate dueDate;       // 만기일

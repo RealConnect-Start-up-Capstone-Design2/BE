@@ -1,5 +1,7 @@
 package com.example.RealConnect.contract.domain;
 
+
+
 public enum ContractStatus {
     // 계약 완료(계약이 유효한 상태),
     ACTIVE,

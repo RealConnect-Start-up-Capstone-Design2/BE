@@ -24,7 +24,7 @@ public class ContractResponseDto {
     private String tenantPhone;
 
     private ContractType contractType;
-    private Long contractPrice;
+    private String contractPrice; // 월세인 경우를 고려하여 String형으로 변환
 
     private LocalDate contractDate;
     private LocalDate dueDate;

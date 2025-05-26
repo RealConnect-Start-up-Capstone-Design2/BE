@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Contract {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 식별자
 
     private String apartment; // 단지명
@@ -30,9 +30,9 @@ public class Contract {
     @Enumerated(EnumType.STRING)
     private ContractType type; // 매매/전세/월세
 
-    private Long price; // 거래 금액
-    private LocalDateTime contractDate; // 계약일
-    private LocalDateTime expireDate; // 계약 만기일
+    private String price; // 거래 금액 // 월세인 경우를 고려하여 String 형으로 변환 2025.5.26
+    private LocalDate contractDate; // 계약일
+    private LocalDate expireDate; // 계약 만기일
 
     @Enumerated(EnumType.STRING)
     private ContractStatus status; //  거래상태: 진행중, 완료 등
