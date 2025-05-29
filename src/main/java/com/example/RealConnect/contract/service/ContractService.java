@@ -1,14 +1,9 @@
 package com.example.RealConnect.contract.service;
 
+import com.example.RealConnect.contract.Exception.ContractNotFoundException;
 import com.example.RealConnect.contract.domain.*;
 import com.example.RealConnect.contract.repository.ContractRepository;
-import com.example.RealConnect.inquiry.domain.Inquiry;
-import com.example.RealConnect.inquiry.repository.InquiryRepository;
-import com.example.RealConnect.property.domain.Property;
-import com.example.RealConnect.property.exception.ContractNotMatchException;
-import com.example.RealConnect.property.exception.InquiryNotMatchException;
-import com.example.RealConnect.property.exception.PropertyNotMatchException;
-import com.example.RealConnect.property.repository.PropertyRepository;
+import com.example.RealConnect.contract.Exception.ContractNotMatchException;
 import com.example.RealConnect.user.domain.User;
 import com.example.RealConnect.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,115 +18,37 @@ import java.util.List;
 public class ContractService {
 
     private final ContractRepository contractRepository;
-    private final PropertyRepository propertyRepository;
-    private final InquiryRepository inquiryRepository;
     private final UserRepository userRepository;
 
 
     // 계약 생성(등록)
     @Transactional
-    public void registerDirectContract(ContractPostRequestDto dto, String username) {
+    public ContractResponseDto createContract(ContractPostRequestDto dto, String username) {
 
         User user = userRepository.findByUsername(username).get();
 
         // 계약 생성
-        Contract contract = new Contract();
-
-        contract.setApartment(dto.getApartment());  // 직접 입력받은 아파트명
-        contract.setDong(dto.getDong());            // 동
-        contract.setHo(dto.getHo());                // 호
-        contract.setArea(dto.getArea());            // 면적
-        contract.setOwnerName(dto.getOwnerName());  // 소유자 이름
-        contract.setOwnerPhone(dto.getOwnerPhone());
-        contract.setTenantName(dto.getTenantName()); // 임차인 이름
-        contract.setTenantPhone(dto.getTenantPhone());
-
-        contract.setPrice(dto.getContractPrice());  // 계약 금액
-        contract.setContractDate(dto.getContractDate().atStartOfDay()); // 계약일
-        contract.setExpireDate(dto.getDueDate().atStartOfDay());       // 만기일
-        contract.setType(ContractType.valueOf(String.valueOf(dto.getContractType()))); // 계약 유형
-        contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
-        contract.setFavorite(dto.isFavorite());   // 즐겨찾기 여부
-        contract.setAgent(user);
-
-        // 계약 저장
-        contractRepository.save(contract);
-    }
-
-    // 1. 매물 관리에서 -> 계약 등록
-    @Transactional
-    public void registerContractFromProperty(ContractPostRequestDto dto, String username){
-
-        // 매물 정보 가져오기
-        Property property = propertyRepository.findById(dto.getPropertyId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 매물을 찾을 수 없습니다."));
-
-        //
-        User user = userRepository.findByUsername(username).get();
-
-        // 매물 소유자 권한 확인
-        verifyPropertyOwner(property, user);
-
-        User agent = property.getAgent(); // 또는 inquiry.getAgent()
-
-        Contract contract = new Contract();
-
-        contract.setApartment(property.getApartment().getName());
-        contract.setDong(property.getApartment().getDong());
-        contract.setHo(property.getApartment().getHo());
-        contract.setArea(property.getApartment().getArea());
-        contract.setOwnerName(property.getOwnerName());
-        contract.setOwnerPhone(property.getOwnerPhone());
-
-        contract.setTenantName(dto.getTenantName());
-        contract.setTenantPhone(dto.getTenantPhone());
-        contract.setPrice(dto.getContractPrice());
-        contract.setContractDate(dto.getContractDate().atStartOfDay());
-        contract.setExpireDate(dto.getDueDate().atStartOfDay());
-        contract.setType(ContractType.valueOf(String.valueOf(dto.getContractType())));
-        contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
-        contract.setFavorite(dto.isFavorite());
-        contract.setAgent(agent);
-
-        contractRepository.save(contract);
-    }
-
-    // 2. 문의 관리에서 -> 계약등록
-    @Transactional
-    public void registerContractFromInquiry(ContractPostRequestDto dto, String username) {
-        // 문의 정보 가져오기
-        Inquiry inquiry = inquiryRepository.findById(dto.getInquiryId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 문의를 찾을 수 없습니다."));
-
-        User user = userRepository.findByUsername(username).get();
-
-        // 문의 작성자 권한 확인
-        verifyInquiryOwner(inquiry, user);
-
-        // 중개사 정보
-        User agent = inquiry.getAgent(); // 또는 property.getAgent()
-
-        // 계약 생성
-        Contract contract = new Contract();
-        contract.setApartment(dto.getApartment());
-        contract.setDong(dto.getDong());
-        contract.setHo(dto.getHo());
-        contract.setArea(dto.getArea());
-        contract.setOwnerName(dto.getOwnerName());
-
-        contract.setTenantName(inquiry.getName()); // 문의자 이름 매핑
-        contract.setTenantPhone(inquiry.getPhone()); // 문의자 연락처 매핑
-
-        contract.setPrice(dto.getContractPrice());
-        contract.setContractDate(dto.getContractDate().atStartOfDay());
-        contract.setExpireDate(dto.getDueDate().atStartOfDay());
-        contract.setType(ContractType.valueOf(String.valueOf(dto.getContractType())));
-        contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
-        contract.setFavorite(dto.isFavorite());
-        contract.setAgent(agent);
+        Contract contract = Contract.builder()
+                .apartment(dto.getApartment())
+                .dong(dto.getDong())
+                .ho(dto.getHo())
+                .area(dto.getArea())
+                .ownerName(dto.getOwnerName())
+                .ownerPhone(dto.getOwnerPhone())
+                .tenantName(dto.getTenantName())
+                .tenantPhone(dto.getTenantPhone())
+                .price(dto.getContractPrice())
+                .contractDate(dto.getContractDate())
+                .expireDate(dto.getDueDate())
+                .type(dto.getContractType())
+                .status(dto.getContractStatus())
+                .favorite(dto.isFavorite())
+                .agent(user)
+                .build();
 
         // 계약 저장
-        contractRepository.save(contract);
+        contract = contractRepository.save(contract);
+        return ContractResponseDto.toDto(contract);
     }
 
     // 2. 조건 기반 계약 검색 - QueryDSL 기반
@@ -153,47 +70,35 @@ public class ContractService {
 
     // 계약 수정 - 계약 수정에 대한 권한이 있는지 검증 후 계약 수정
     @Transactional
-    public void updateContract(Long contractId, ContractPostRequestDto dto, String username) {
+    public ContractResponseDto updateContract(Long contractId, ContractPostRequestDto dto, String username) {
         // 계약 정보 가져오기
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 계약을 찾을 수 없습니다.")); // 계약이 존재하지 않으면 예외 처리
+                .orElseThrow(() -> new ContractNotFoundException("해당 계약을 찾을 수 없습니다.")); // 계약이 존재하지 않으면 예외 처리
 
         User user = userRepository.findByUsername(username).get();
 
         // 계약 수정 권한 확인
         verifyContractOwner(contract, user);  // 계약 수정 권한 검증
 
-        // 계약 정보 업데이트
-        contract.setApartment(dto.getApartment());
-        contract.setDong(dto.getDong());
-        contract.setHo(dto.getHo());
-        contract.setArea(dto.getArea());
-        contract.setOwnerName(dto.getOwnerName());
-        contract.setTenantName(dto.getTenantName());
-        contract.setPrice(dto.getContractPrice());
-        contract.setContractDate(dto.getContractDate().atStartOfDay());
-        contract.setExpireDate(dto.getDueDate().atStartOfDay());
-        contract.setType(ContractType.valueOf(String.valueOf(dto.getContractType())));
-        contract.setStatus(ContractStatus.ACTIVE); // 기본은 ACTIVE
-        contract.setFavorite(dto.isFavorite());
+        contract.update(dto);
 
-        // 계약 수정 후 저장
-        contractRepository.save(contract);
+        return ContractResponseDto.toDto(contract);
     }
 
 
     // 계약 삭제
     @Transactional
-    public void deleteContract(Long contractId){
+    public void deleteContract(Long contractId,String username){
         Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 계약을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ContractNotFoundException("해당 계약을 찾을 수 없습니다."));
+
+        User user = userRepository.findByUsername(username).get();
+
+        verifyContractOwner(contract, user);
 
         contractRepository.delete(contract);
     }
 
-    //// 검증함수
-
-    // 계약 수정 권한 확인
     /**
      * 계약 수정 권한 확인
      * @param contract
@@ -203,31 +108,6 @@ public class ContractService {
         // 계약의 중개사(또는 작성자)만 수정 가능
         if (!contract.getAgent().equals(user)) {
             throw new ContractNotMatchException("계약 수정 권한이 없습니다.");
-        }
-    }
-
-
-    // property에 대해 요청자가 생성한 것인지 검증
-    /**
-     *
-     * @param property
-     * @param user
-     */
-    private void verifyPropertyOwner(Property property, User user) {
-        if (!property.getAgent().equals(user)) {
-            throw new PropertyNotMatchException("해당 매물 계약 등록 권한이 없습니다.");
-        }
-    }
-
-    // inquiry에 대해 요청자가 생성한 것인지 검증
-    /**
-     *
-     * @param inquiry
-     * @param user
-     */
-    private void verifyInquiryOwner(Inquiry inquiry, User user) {
-        if (!inquiry.getAgent().equals(user)) {
-            throw new InquiryNotMatchException("해당 문의 계약 등록 권한이 없습니다.");
         }
     }
 
