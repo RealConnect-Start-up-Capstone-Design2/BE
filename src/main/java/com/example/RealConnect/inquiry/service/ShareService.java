@@ -188,7 +188,7 @@ public class ShareService {
                 .customerName(inquiry.getName())
                 .customerPhone(inquiry.getPhone())
                 .apartmentName(inquiry.getApartmentName())
-                .area(Double.parseDouble(inquiry.getArea()))
+                .area(inquiry.getArea()) // string 형으로
                 .salePrice(inquiry.getSalePrice())
                 .jeonsePrice(inquiry.getJeonsePrice())
                 .deposit(inquiry.getDeposit())
