@@ -2,14 +2,15 @@ package com.example.RealConnect.contract.domain;
 
 import com.example.RealConnect.user.domain.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
-@Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Contract {
 
     @Id
@@ -41,4 +42,33 @@ public class Contract {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User agent; // 공인중개사
+
+
+    /**
+     * User, ID를 제외한 모든 필드를 덮어씀
+     * @param dto
+     * @return Contract
+     */
+    public Contract update(ContractPostRequestDto dto)
+    {
+        apartment = dto.getApartment();
+        dong = dto.getDong();
+        ho = dto.getHo();
+        area = dto.getArea();
+        ownerName = dto.getOwnerName();
+        ownerPhone = dto.getOwnerPhone();
+        tenantName = dto.getTenantName();
+        tenantPhone = dto.getTenantPhone();
+
+        price = dto.getContractPrice();
+        type = dto.getContractType();
+
+        contractDate = dto.getContractDate();
+        expireDate = dto.getDueDate();
+
+        status = dto.getContractStatus();
+        favorite = dto.isFavorite();
+
+        return this;
+    }
 }
