@@ -32,4 +32,6 @@ public class ContractPostRequestDto {
     private String area;
     private String ownerName;
     private String ownerPhone;
+
+    private ContractStatus contractStatus;
 }
