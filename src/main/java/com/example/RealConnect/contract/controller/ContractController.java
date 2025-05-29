@@ -1,5 +1,6 @@
 package com.example.RealConnect.contract.controller;
 
+import com.example.RealConnect.contract.Exception.InvalidContractTypeException;
 import com.example.RealConnect.contract.domain.ContractPostRequestDto;
 import com.example.RealConnect.contract.domain.ContractResponseDto;
 import com.example.RealConnect.contract.service.ContractService;
@@ -20,7 +21,7 @@ public class ContractController {
 
     private final ContractService contractService;
 
-    // 매물관리, 문의관리를 거치지 않고 바로 계약등록
+    // 계약등록
     @PostMapping("/api/contract")
     public ResponseEntity<Void> registerDirectContract(@RequestBody ContractPostRequestDto dto, Principal principal) {
         contractService.registerDirectContract(dto, principal.getName());  // 직접 계약 등록
@@ -80,5 +81,10 @@ public class ContractController {
         contractService.deleteContract(contractId);  // 계약 삭제 처리
         return ResponseEntity.noContent().build();  // 성공적으로 삭제되면 204 No Content 반환
     }
-//이거 지워줘 젭라 젭라
+
+    // 예외처리
+    @ExceptionHandler(InvalidContractTypeException.class)
+    public ResponseEntity<String> handleInvalidContractTypeException(InvalidContractTypeException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }

@@ -28,7 +28,7 @@ public class ContractService {
     private final UserRepository userRepository;
 
 
-    // 계약 생성(등록) - 매물관리, 문의관리를 거치지 않고 계약을 바로 작성하는 경우
+    // 계약 생성(등록)
     @Transactional
     public void registerDirectContract(ContractPostRequestDto dto, String username) {
 
