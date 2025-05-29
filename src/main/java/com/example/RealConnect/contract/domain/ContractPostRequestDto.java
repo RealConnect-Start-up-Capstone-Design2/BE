@@ -27,8 +27,8 @@ public class ContractPostRequestDto {
 
     // 계액 등록 시 공인중개사가 직접 입력; 문의 관리에서 계약으로 넘어오는 경우에만 사용
     private String apartment;
-    private String Dong;
-    private String Ho;
+    private String dong;
+    private String ho;
     private String area;
     private String ownerName;
     private String ownerPhone;
