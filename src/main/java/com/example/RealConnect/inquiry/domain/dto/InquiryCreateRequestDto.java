@@ -14,7 +14,7 @@ public class InquiryCreateRequestDto {
     private String phone; // 문의자 연락처
     private String inquiryType; // 문의 유형
     private String apartmentName; // 단지
-    private double area; // 면적
+    private String area; // 면적
     private Long salePrice; // 매매가
     private Long jeonsePrice; // 전세가
     private Long deposit; // 보증금
