@@ -6,9 +6,6 @@ import java.time.LocalDate;
 
 @Setter
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ContractResponseDto {
     // 계약 조회 시 사용
     private Long id;
@@ -52,8 +49,8 @@ public class ContractResponseDto {
         dto.setContractType(contract.getType());
         dto.setContractPrice(contract.getPrice());
 
-        dto.setContractDate(contract.getContractDate().toLocalDate());
-        dto.setDueDate(contract.getExpireDate().toLocalDate());
+        dto.setContractDate(contract.getContractDate());
+        dto.setDueDate(contract.getExpireDate());
 
         dto.setContractStatus(contract.getStatus());
         dto.setFavorite(contract.isFavorite());
