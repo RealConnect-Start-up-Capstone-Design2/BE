@@ -46,8 +46,8 @@ public class InquiryService {
                 .phone(dto.getPhone())
                 .type(InquiryType.valueOf(dto.getInquiryType())) //
                 .apartmentName(dto.getApartmentName())
-                .area(dto.getArea())
-                .salePrice(dto.getSalePrice())
+                .area(String.valueOf(dto.getArea())) //
+                .salePrice(dto.getSalePrice())  //////
                 .jeonsePrice(dto.getJeonsePrice())
                 .deposit(dto.getDeposit())
                 .monthPrice(dto.getMonthPrice())
@@ -70,7 +70,7 @@ public class InquiryService {
     2. 문의 유형 드롭박스로 검색(전체, 매매, 전세, 월세)
     3. 진행 상채 드롭박스로 검색(전체, 진행 중, 진행 완료)
      */
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) ////////////////
     public List<InquiryResponseDto> searchInquiries(String username, String status, String inquiryType,
                                                     String keyword, Boolean favoriteOnly) {
 

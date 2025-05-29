@@ -73,7 +73,7 @@ public class InquiryPost {
      * 상세정보
      */
     private String apartmentName; //단지
-    private double area; //면적
+    private String area; //면적
     private Long salePrice; //매매가
     private Long jeonsePrice; //전세가
     private Long deposit; //보증금
@@ -131,7 +131,7 @@ public class InquiryPost {
         customerName = requestDto.getCustomerName();
         customerPhone = requestDto.getCustomerPhone();
         apartmentName = requestDto.getApartmentName();
-        area = requestDto.getArea();
+        area = String.valueOf(requestDto.getArea());
         salePrice = requestDto.getSalePrice();
         jeonsePrice = requestDto.getJeonsePrice();
         deposit = requestDto.getDeposit();
