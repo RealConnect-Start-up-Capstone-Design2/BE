@@ -72,12 +72,12 @@ public class InquiryService {
      */
     @Transactional(readOnly = true) ////////////////
     public List<InquiryResponseDto> searchInquiries(String username, String status, String inquiryType,
-                                                    String keyword, Boolean favoriteOnly) {
+                                                    String keyword, Boolean favorite) {//
 
         User agent = userRepository.findByUsername(username).get();
 
         List<Inquiry> inquiries = inquiryRepository.searchInquiriesByCondition(agent.getId(), status, inquiryType,
-                keyword, favoriteOnly);
+                keyword, favorite);//
 
         return inquiries.stream()
                 .map(InquiryResponseDto::from)

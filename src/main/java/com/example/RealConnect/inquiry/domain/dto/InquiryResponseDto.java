@@ -25,6 +25,7 @@ public class InquiryResponseDto {
     private String memo; // 문의 내용
     private InquiryStatus status; // 진행 상태
     private LocalDateTime createdAt; // 등록일
+    private boolean favorite;
 
     // Entity → DTO 변환용 정적 메서드
     public static InquiryResponseDto from(Inquiry inquiry) {
@@ -42,6 +43,7 @@ public class InquiryResponseDto {
                 .memo(inquiry.getMemo())
                 .status(inquiry.getStatus())
                 .createdAt(inquiry.getCreatedAt())
+                .favorite(inquiry.isFavorite())  ///
                 .build();
     }
 }
