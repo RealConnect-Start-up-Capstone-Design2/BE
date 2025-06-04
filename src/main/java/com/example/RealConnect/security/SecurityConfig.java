@@ -23,7 +23,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @EnableWebSecurity
 @Configuration
@@ -31,7 +33,7 @@ import java.util.Collections;
 public class SecurityConfig {
 
     @Value("${front_url}")
-    private String frontUrl;
+    private String[] frontUrl;
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
@@ -62,7 +64,12 @@ public class SecurityConfig {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request)
                     {
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Collections.singletonList(frontUrl));
+                        /*
+                            프론트 url의 경우, ','로 구분되어 allowed리스트에 들어감
+                         */
+                        List<String> allowed = Arrays.asList(frontUrl);
+                        config.setAllowedOrigins(allowed);
+
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
